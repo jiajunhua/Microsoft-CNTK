@@ -421,7 +421,7 @@ const std::vector<Variable> FindByNameHint(const std::vector<Variable> &inputs, 
 }
 
 Variable GetInitialStateVariable(const std::vector<Variable> &inputs, int numDirections,
-                                 const std::string &nameHint, DataType datatype)
+                                 const std::string &nameHint, CNTK::DataType datatype)
 {
     Variable initialVariable = datatype == DataType::Double ? Constant::Scalar(0.0) : Constant::Scalar(0.0f);
     const std::vector<Variable> initialVariables = FindByNameHint(inputs, nameHint);

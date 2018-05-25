@@ -5,8 +5,8 @@
 
 #include "ONNX.h"
 #include "CNTKToONNX.h"
-#include "proto/onnx/core/model.h"
-#include "proto/onnx/core/graph.h"
+#include "proto/onnx/core/graph/model.h"
+#include "proto/onnx/core/graph/graph.h"
 #include "Utils.h"
 
 #include <iostream>
@@ -62,7 +62,7 @@ FunctionPtr ONNXFormat::Load(const std::wstring& filepath, const DeviceDescripto
 #else
     Status loadStatus = ONNXIR::Model::Load(ToString(filepath), &model);
 #endif
-    if (!loadStatus.Ok())
+    if (!loadStatus.IsOK())
         LogicError("Failed to load the model.");
 
     FunctionPtr cntkFunction = ONNXToCNTK::CreateGraph(model->MainGraph(), computeDevice);

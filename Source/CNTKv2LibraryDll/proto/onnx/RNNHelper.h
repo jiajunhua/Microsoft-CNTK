@@ -11,13 +11,15 @@
 #include "CNTKLibrary.h"
 #include "Utils.h"
 
-#include "proto/onnx/core/model.h"
+#include "proto/onnx/core/graph/model.h"
 
 #include <algorithm>
 #include "CNTKLibrary.h"
 #include <functional>
 
 using namespace CNTK;
+
+#define ONNXIR LotusIR
 using namespace ONNXIR;
 
 const std::string LSTMInputBiasNameHint = "_bias_";
