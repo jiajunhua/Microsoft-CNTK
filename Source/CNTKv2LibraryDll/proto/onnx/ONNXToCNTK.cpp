@@ -5,6 +5,7 @@
 
 #include "ONNXToCNTK.h"
 #include "proto/onnx/core/graph/graph.h"
+#include "proto/onnx/core/graph/tensorutils.h"
 #include "Utils.h"
 #include "Operators.h"
 #include <algorithm>
@@ -17,11 +18,7 @@ using namespace CNTK::ONNX;
 
 namespace CNTK
 {
-    bool SupportONNX21()
-    {
-        auto map = onnx::OpSchemaRegistry::DomainToVersionRange::Instance().Map();
-        return map.find(onnx::ONNX_DOMAIN) != map.end() && map[onnx::ONNX_DOMAIN].second == 7;
-    }
+    bool SupportONNX1_2();
 
     NDShape GetShapeFromInput(const NodeArg* shapeInput, const Graph *graph)
     {
@@ -58,9 +55,9 @@ private:
     static Constant CreateConstant(const onnx::TensorProto &valueProto, const std::string &nodeName,
                                    const DeviceDescriptor &computeDevice);
     template <typename T>
-    static const CNTK::Constant NewFunction(CNTK::NDShape &shape, onnx::TensorProto_DataType dataType,
-                                            const T *srcData, CNTK::NDShape &reversedShape,
-                                            const CNTK::DeviceDescriptor &computeDevice, const std::string &nodeName);
+    static const CNTK::Constant CreateConstantWithTensorData(CNTK::NDShape &shape, onnx::TensorProto_DataType tensorProtoDataType,
+        CNTK::DataType cntkDataType, const T *srcData, CNTK::NDShape &reversedShape, 
+        const CNTK::DeviceDescriptor &computeDevice, const std::string &nodeName);
     static Variable CreateLeafVariableOrConstant(const NodeArg *nodeArg, const Node *parentNode, const Graph *graph,
                                                  const DeviceDescriptor &computeDevice);
     static std::vector<Variable> CreateRNNLeafVariableOrConstant(const NodeArg *nodeArg,
@@ -266,6 +263,7 @@ CNTK::DataType ONNXToCNTKHelper::FromONNXType(onnx::TypeProto type)
 {
     switch (type.tensor_type().elem_type())
     {
+        // all unsupported types are casted to float
     case onnx::TensorProto_DataType_INT64:
     case onnx::TensorProto_DataType_INT32:
     case onnx::TensorProto_DataType_BOOL:
@@ -392,32 +390,32 @@ Constant ONNXToCNTKHelper::CreateConstant(const Node *node, const DeviceDescript
     return CreateConstant(valueProto, node->Name(), computeDevice);
 }
 
-#include "proto/onnx/core/graph/tensorutils.h"
-
-Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, const std::string &nodeName,
-                                          const DeviceDescriptor &computeDevice)
+Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, const std::string &nodeName, 
+    const DeviceDescriptor &computeDevice)
 {
-    auto dataType = valueProto.data_type();
+    auto tensorProtoDataType = valueProto.data_type();
 
     NDShape shape(std::vector<size_t>(valueProto.dims().begin(), valueProto.dims().end()));
 
     // the following code is to revert CNTKToONNXHelper::ToTensorShape.to restore a CNTK NDArray
     NDShape reversedShape = ReverseShape(shape);
 
-    switch (dataType)
+    switch (tensorProtoDataType)
     {
     case TensorProto_DataType_BOOL:
     {
+        // It does not work using vector<bool> because resulted memory layout is not what we expect.
         bool *srcData = new bool[shape.TotalSize()];
         Lotus::Utils::TensorUtils::UnpackTensor(valueProto, srcData, shape.TotalSize());
 
-        // because CNTK does not support int,  need to convert to float;
-        std::vector<float> srcFloatData(shape.TotalSize()); //  srcData.begin(), srcData.end());
+        // CNTK does not support bool. We need to convert to float.
+        std::vector<float> srcFloatData(shape.TotalSize());
         for (int i = 0; i < shape.TotalSize(); i++)
             srcFloatData[i] = srcData[i];
         delete[] srcData;
 
-        return NewFunction<float>(shape, dataType, &srcFloatData[0], reversedShape, computeDevice, nodeName);
+        return CreateConstantWithTensorData<float>(shape, tensorProtoDataType, CNTK::DataType::Float,
+            &srcFloatData[0], reversedShape, computeDevice, nodeName);
     }
     break;
     case TensorProto_DataType_INT32:
@@ -425,12 +423,13 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
         std::vector<int32_t> srcData(shape.TotalSize());
         Lotus::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
 
-        // because CNTK does not support int,  need to convert to float;
-        std::vector<float> srcFloatData(shape.TotalSize()); //  srcData.begin(), srcData.end());
+        // CNTK does not support int. We need to convert to float.
+        std::vector<float> srcFloatData(shape.TotalSize());
         for (int i = 0; i < shape.TotalSize(); i++)
             srcFloatData[i] = srcData[i];
 
-        return NewFunction<float>(shape, dataType, &srcFloatData[0], reversedShape, computeDevice, nodeName);
+        return CreateConstantWithTensorData<float>(shape, tensorProtoDataType, CNTK::DataType::Float,
+            &srcFloatData[0], reversedShape, computeDevice, nodeName);
     }
     break;
     case TensorProto_DataType_INT64:
@@ -438,12 +437,13 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
         std::vector<int64_t> srcData(shape.TotalSize());
         Lotus::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
 
-        // because CNTK does not support int,  need to convert to float;
-        std::vector<float> srcFloatData(shape.TotalSize()); //  srcData.begin(), srcData.end());
+        // CNTK does not support int64_t. We need to convert to float.
+        std::vector<float> srcFloatData(shape.TotalSize());
         for (int i = 0; i < shape.TotalSize(); i++)
             srcFloatData[i] = srcData[i];
 
-        return NewFunction<float>(shape, dataType, &srcFloatData[0], reversedShape, computeDevice, nodeName);
+        return CreateConstantWithTensorData<float>(shape, tensorProtoDataType, CNTK::DataType::Float,
+            &srcFloatData[0], reversedShape, computeDevice, nodeName);
     }
     break;
     case TensorProto_DataType_FLOAT:
@@ -453,7 +453,8 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
             RetrieveRawDataAsFloat(valueProto);
         }
 
-        return NewFunction<float>(shape, dataType, &(valueProto.float_data()[0]), reversedShape, computeDevice, nodeName);
+        return CreateConstantWithTensorData<float>(shape, tensorProtoDataType, CNTK::DataType::Float, 
+            &(valueProto.float_data()[0]), reversedShape, computeDevice, nodeName);
     }
     break;
     case TensorProto_DataType_DOUBLE:
@@ -464,7 +465,8 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
             RetrieveRawDataAsDouble(valueProto);
         }
 
-        return NewFunction<double>(shape, dataType, &(valueProto.double_data()[0]), reversedShape, computeDevice, nodeName);
+        return CreateConstantWithTensorData<double>(shape, tensorProtoDataType, CNTK::DataType::Double, 
+            &(valueProto.double_data()[0]), reversedShape, computeDevice, nodeName);
     }
     break;
     default:
@@ -473,8 +475,8 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
 }
 
 template <typename T>
-const CNTK::Constant CNTK::ONNXToCNTKHelper::NewFunction(CNTK::NDShape &shape, onnx::TensorProto_DataType dataType,
-                                                         const T *srcData, CNTK::NDShape &reversedShape, const CNTK::DeviceDescriptor &computeDevice, const std::string &nodeName)
+const CNTK::Constant CNTK::ONNXToCNTKHelper::CreateConstantWithTensorData(CNTK::NDShape &shape, onnx::TensorProto_DataType tensorProtoDataType, 
+    CNTK::DataType cntkDataType, const T *srcData, CNTK::NDShape &reversedShape, const CNTK::DeviceDescriptor &computeDevice, const std::string &nodeName)
 {
     auto totalSize = shape.TotalSize();
     T *data = new T[totalSize];
@@ -506,8 +508,8 @@ const CNTK::Constant CNTK::ONNXToCNTKHelper::NewFunction(CNTK::NDShape &shape, o
         }
     }
 
-    NDArrayViewPtr dstFinal(new NDArrayView(DataType::Float, reversedShape, &data[0],
-                                            totalSize * sizeof(float), computeDevice.CPUDevice()));
+    NDArrayViewPtr dstFinal(new NDArrayView(cntkDataType, reversedShape, &data[0],
+                                            totalSize * sizeof(T), computeDevice.CPUDevice()));
 
     if (computeDevice.Type() == DeviceKind::CPU)
     {
@@ -518,7 +520,7 @@ const CNTK::Constant CNTK::ONNXToCNTKHelper::NewFunction(CNTK::NDShape &shape, o
     {
         // this is the way to load values into GPU:
         // Create a GPU NDArrayView and CopyFrom a CPU NDArrayView that holding the data.
-        NDArrayViewPtr dstFinalGPU(new NDArrayView(DataType::Float, StorageFormat::Dense, reversedShape, computeDevice));
+        NDArrayViewPtr dstFinalGPU(new NDArrayView(cntkDataType, StorageFormat::Dense, reversedShape, computeDevice));
         dstFinalGPU->CopyFrom(*dstFinal);
         Constant constantVariable(dstFinalGPU, ToWString(nodeName));
         return constantVariable;
@@ -2381,7 +2383,7 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
     else if (onnxOpName == "Reshape")
     {
         NDShape newShape;
-        if (!SupportONNX21())
+        if (!SupportONNX1_2())
             newShape = GetNamedAttributeAsShape(node, "shape", false);
         else
         {
