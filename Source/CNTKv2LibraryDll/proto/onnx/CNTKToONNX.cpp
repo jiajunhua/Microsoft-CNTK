@@ -35,9 +35,18 @@ bool SupportONNX1_2()
     return map.find(onnx::ONNX_DOMAIN) != map.end() && map[onnx::ONNX_DOMAIN].second == 7;
 }
 
+onnx::TypeProto MakeTypeProtoWithShape()
+{
+    onnx::TypeProto typeProtoWithShape;
+    // this is to ensure a scalar has a tensor shape of zero dimenstion.
+    typeProtoWithShape.mutable_tensor_type()->mutable_shape();
+    return typeProtoWithShape;
+}
+
 onnx::TypeProto TensorShapeProtoToTypeProto(const onnx::TensorShapeProto* inputShape)
 {
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     int inputRank = inputShape->dim_size();
     for (int index = 0; index < inputRank; index++)
         newShape.mutable_tensor_type()->mutable_shape()->add_dim()->set_dim_value(inputShape->dim(index).dim_value());
@@ -55,7 +64,8 @@ onnx::TypeProto ReduceRank(const onnx::TensorShapeProto* inputShape, int reducti
     int inputRank = inputShape->dim_size();
     assert(inputRank > reductionRank);
 
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     int64_t reduceDim = 1;
 
     if (rightReduction)
@@ -892,7 +902,8 @@ int CNTKToONNXHelper::ToIndex(const Axis& axis)
 
 onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const NDShape& shape, int dynamicAxisCount)
 {
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     if (shape.HasInferredDimension())
     {
         LogicError("This model has tensor dimensions marked as InferredDimension. Please evaluate"
@@ -913,7 +924,8 @@ onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const NDShape& shape, int dynamicA
 
 onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const NDShape& shape, bool hasBatchAxis, bool hasSequenceAxis, bool doReverseShape)
 {
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     if (shape.HasInferredDimension())
     {
         LogicError("This model has tensor dimensions marked as InferredDimension. Please evaluate"
@@ -947,8 +959,10 @@ onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const NDShape& shape, bool hasBatc
 
 onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const std::vector<bool>& shape)
 {
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     auto dimensions = reverse(shape);
+
     for (auto dimension : dimensions)
         newShape.mutable_tensor_type()->mutable_shape()->add_dim()->set_dim_value(dimension ? 1 : 0);
 
@@ -958,10 +972,13 @@ onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const std::vector<bool>& shape)
 onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const std::vector<int>& shape,
                                               bool doReverseVec /* = true*/)
 {
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     std::vector<int> dimensions(shape);
     if (doReverseVec)
         dimensions = reverse(dimensions);
+    
+
     for (auto dimension : dimensions)
         newShape.mutable_tensor_type()->mutable_shape()->add_dim()->set_dim_value(dimension);
 
@@ -977,7 +994,8 @@ onnx::TypeProto CNTKToONNXHelper::ToTypeProto(const std::vector<Axis>& axes)
     }
     std::sort(axesValue.begin(), axesValue.end());
 
-    onnx::TypeProto newShape;
+    onnx::TypeProto newShape = MakeTypeProtoWithShape();
+
     for (auto dimension : axesValue)
         newShape.mutable_tensor_type()->mutable_shape()->add_dim()->set_dim_value(dimension);
 
