@@ -5,6 +5,10 @@
 # Label: com.nvidia.cuda.version: 9.0.176
 # Label: com.nvidia.cudnn.version: 7.0.4.31
 # Label: com.nvidia.nccl.version: 2.1.2
+#
+# To build, run from the parent with the command line:
+# 	docker build -t <image name> -f CNTK-GPU-Image/Dockerfile .
+
 # Ubuntu 16.04.5
 FROM nvidia/cuda@sha256:33add9c50ab76b8f3a92187c0418ed600d5bea27690fda40711122fdc28ce2f4
 
@@ -154,6 +158,10 @@ RUN cd /root && \
     ./configure --without-alllang && \
     make -j $(nproc) && \
     make install
+
+COPY ./Patches /tmp/patches
+RUN /tmp/patches/patch_swig.sh /usr/local/share/swig/3.0.10 && \
+	rm -rfd /tmp/patches
 
 # Anaconda
 RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \

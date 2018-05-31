@@ -1,6 +1,9 @@
 # CNTK Dockerfile
 #   CPU only
 #   No 1-bit SGD
+#
+# To build, run from the parent with the command line:
+# 	docker build -t <image name> -f CNTK-CPUOnly-Image/Dockerfile .
 
 FROM ubuntu:16.04
 
@@ -151,6 +154,10 @@ RUN cd /root && \
     make -j $(nproc) && \
     make install
 
+COPY ./Patches /tmp/patches
+RUN /tmp/patches/patch_swig.sh /usr/local/share/swig/3.0.10 && \
+	rm -rfd /tmp/patches
+	
 # Anaconda
 RUN wget -q https://repo.continuum.io/archive/Anaconda3-4.2.0-Linux-x86_64.sh && \
     bash Anaconda3-4.2.0-Linux-x86_64.sh -b && \
