@@ -208,8 +208,6 @@
     <ClInclude Include="proto\onnx\onnx\defs\shape_inference.h" />
     <ClInclude Include="proto\onnx\onnx\onnx-operators_pb.h" />
     <ClInclude Include="proto\onnx\onnx\onnx_pb.h" />
-    <ClInclude Include="proto\onnx\onnx\protobuf\onnx-ml.pb.h" />
-    <ClInclude Include="proto\onnx\onnx\protobuf\onnx-operators-ml.pb.h" />
     <ClInclude Include="proto\onnx\onnx\proto_utils.h" />
     <ClInclude Include="proto\onnx\onnx\string_utils.h" />
     <ClInclude Include="proto\onnx\Operators.h" />

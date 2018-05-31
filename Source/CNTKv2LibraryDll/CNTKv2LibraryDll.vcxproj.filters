@@ -244,12 +244,6 @@
     <ClInclude Include="proto\onnx\onnx\string_utils.h">
       <Filter>proto\onnx\onnx</Filter>
     </ClInclude>
-    <ClInclude Include="proto\onnx\onnx\protobuf\onnx-ml.pb.h">
-      <Filter>proto\onnx\onnx\protobuf</Filter>
-    </ClInclude>
-    <ClInclude Include="proto\onnx\onnx\protobuf\onnx-operators-ml.pb.h">
-      <Filter>proto\onnx\onnx\protobuf</Filter>
-    </ClInclude>
     <ClInclude Include="proto\onnx\onnx\defs\data_type_utils.h">
       <Filter>proto\onnx\onnx\defs</Filter>
     </ClInclude>
