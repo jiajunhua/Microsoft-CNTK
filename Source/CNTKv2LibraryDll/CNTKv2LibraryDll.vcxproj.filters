@@ -126,6 +126,15 @@
     <ClCompile Include="proto\onnx\onnx\defs\math\old.cc">
       <Filter>proto\onnx\onnx\defs\math</Filter>
     </ClCompile>
+    <ClCompile Include="proto\onnx\onnx\defs\nn\old.cc">
+      <Filter>proto\onnx\onnx\defs\nn</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\onnx\defs\tensor\old.cc">
+      <Filter>proto\onnx\onnx\defs\tensor</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\onnx\defs\rnn\old.cc">
+      <Filter>proto\onnx\onnx\defs\rnn</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="stdafx.h" />

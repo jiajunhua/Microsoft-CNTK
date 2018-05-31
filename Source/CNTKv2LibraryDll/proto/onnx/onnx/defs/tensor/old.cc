@@ -1,7 +1,7 @@
 // Copyright (c) Facebook Inc. and Microsoft Corporation.
 // Licensed under the MIT license.
 
-#include "onnx/defs/schema.h"
+#include "proto/onnx/onnx/defs/schema.h"
 
 using namespace ONNX_NAMESPACE;
 

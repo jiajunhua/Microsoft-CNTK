@@ -1,4 +1,4 @@
-#include "onnx/defs/schema.h"
+#include "proto/onnx/onnx/defs/schema.h"
 
 using namespace ONNX_NAMESPACE;
 

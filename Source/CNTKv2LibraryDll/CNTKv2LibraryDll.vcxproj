@@ -267,10 +267,13 @@
     <ClCompile Include="proto\onnx\onnx\defs\math\defs.cpp" />
     <ClCompile Include="proto\onnx\onnx\defs\math\old.cc" />
     <ClCompile Include="proto\onnx\onnx\defs\nn\defs.cpp" />
+    <ClCompile Include="proto\onnx\onnx\defs\nn\old.cc" />
     <ClCompile Include="proto\onnx\onnx\defs\reduction\defs.cpp" />
     <ClCompile Include="proto\onnx\onnx\defs\rnn\defs.cpp" />
+    <ClCompile Include="proto\onnx\onnx\defs\rnn\old.cc" />
     <ClCompile Include="proto\onnx\onnx\defs\schema.cpp" />
     <ClCompile Include="proto\onnx\onnx\defs\tensor\defs.cpp" />
+    <ClCompile Include="proto\onnx\onnx\defs\tensor\old.cc" />
     <ClCompile Include="proto\onnx\onnx\defs\traditionalml\defs.cpp" />
     <ClCompile Include="proto\onnx\onnx\protobuf\onnx-ml.pb.cc.VS_wrapper.cpp" />
     <ClCompile Include="proto\onnx\Operators.cpp" />
