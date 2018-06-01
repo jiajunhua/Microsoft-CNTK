@@ -4,7 +4,7 @@
 #include <vector>
 
 #include "gsl/pointers"
-#include "gsl/span"
+// #include "gsl/span"
 
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/common/status.h"
@@ -35,9 +35,9 @@ public:
         if (tensor.field_size() != expected_size)                                                         \
             return Status(StatusCategory::LOTUS, StatusCode::FAIL,                                        \
                           "UnpackTensor: the pre-allocated size does not match the size in proto");       \
-        const auto span = gsl::make_span(p_data, expected_size);                                          \
-        auto& data = tensor.field_name();                                                                 \
-        std::copy(data.cbegin(), data.cend(), span.begin());                                              \
+        for (auto elem : tensor.field_name()) {                                                           \
+            *p_data++ = static_cast<T>(elem);                                                             \
+        }                                                                                                 \
         return Status::OK();                                                                              \
     }
 

@@ -1,7 +1,7 @@
 #include "proto/onnx/core/graph/tensorutils.h"
 
 #include <algorithm>
-#include "gsl/span"
+// #include "gsl/span"
 
 namespace Lotus
 {
@@ -20,10 +20,9 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
         return Status(StatusCategory::LOTUS, StatusCode::FAIL,
                       "UnpackTensor: the pre-allocate size does not match the size in proto");
 
-    const auto data = gsl::make_span(p_data, expected_size);
-
-    auto& string_data = tensor.string_data();
-    std::copy(string_data.cbegin(), string_data.cend(), data.begin());
+    for (auto& elem : tensor.string_data()) {
+        *p_data++ = elem;
+    }
 
     return Status::OK();
 }
@@ -51,8 +50,9 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
         return Status(StatusCategory::LOTUS, StatusCode::FAIL,
                       "UnpackTensor: the pre-allocate size does not match the size in proto");
 
-    const auto data = gsl::make_span(p_data, expected_size);
-    std::copy(tensor.int32_data().cbegin(), tensor.int32_data().cend(), data.begin());
+    for (auto& elem : tensor.int32_data()) {
+        *p_data++ = elem != 0;
+    }
 
     return Status::OK();
 }
