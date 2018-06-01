@@ -4,8 +4,8 @@
 #include <numeric>
 #include <stack>
 
-#include "gsl/pointers"
 #include "graph.h"
+#include "gsl/pointers"
 #include "op.h"
 #include "utils.h"
 #include "proto/onnx/core/common/logging/logging.h"
