@@ -41,6 +41,10 @@ namespace std {
     {
         return unique_ptr<T>(new T(forward<Args>(args)...));
     }
+
+    template<bool _Test,
+        class _Ty = void>
+        using enable_if_t = typename enable_if<_Test, _Ty>::type;
 }
 #else
 using std::make_unique; 
