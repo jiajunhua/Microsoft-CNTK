@@ -78,9 +78,9 @@ endif
 
 # The mpic++ wrapper only adds MPI specific flags to the g++ command line.
 # The actual compiler/linker flags added can be viewed by running 'mpic++ --showme:compile' and 'mpic++ --showme:link'
-#ifneq ($(HAS_MPI),0)
-#CXX = $(MPI_PATH)/bin/mpic++
-#endif
+ifneq ($(HAS_MPI),0)
+CXX = $(MPI_PATH)/bin/mpic++
+endif
 
 SSE_FLAGS = -msse4.1 -mssse3
 
