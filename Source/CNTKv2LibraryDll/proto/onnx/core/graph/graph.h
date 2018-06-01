@@ -9,7 +9,7 @@
 
 #include "proto/onnx/core/common/common.h"
 
-#include "gsl/pointers"
+// #include "gsl/pointers"
 #include "gsl/gsl_util"
 
 #include "proto/onnx/core/common/status.h"
@@ -551,7 +551,7 @@ public:
     // TODO(Task:135) See if GraphBase::GetNodesInTopologicalOrder can be made more correctly const
     // by forcing Resolve to have been called directly previously. Simple change is to return error if
     // GraphResolveNeeded is true.
-    Status GetNodesInTopologicalOrder(/*out*/ gsl::not_null<const std::vector<NodeIndex>**> pp_nodes) const;
+    Status GetNodesInTopologicalOrder(/*out*/ const std::vector<NodeIndex>** pp_nodes) const;
 
     // Mark Graph as needing Resolve() to be called
     GraphBase& SetGraphResolveNeeded() noexcept
@@ -695,7 +695,7 @@ private:
     // need custom versions to handle the unique_ptr's in nodes_
     LOTUS_DISALLOW_COPY_ASSIGN_AND_MOVE(GraphBase);
 
-    gsl::not_null<Node*> AllocateNode();
+    Node* AllocateNode();
 
     /**
   Release the node. 

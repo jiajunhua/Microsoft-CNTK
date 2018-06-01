@@ -3,7 +3,7 @@
 #include <type_traits>
 #include <vector>
 
-#include "gsl/pointers"
+// #include "gsl/pointers"
 // #include "gsl/span"
 
 #include "proto/onnx/core/common/common.h"

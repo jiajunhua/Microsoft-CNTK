@@ -5,7 +5,7 @@
 #include <stack>
 
 #include "graph.h"
-#include "gsl/pointers"
+// #include "gsl/pointers"
 #include "op.h"
 #include "utils.h"
 #include "proto/onnx/core/common/logging/logging.h"
@@ -205,7 +205,7 @@ void Node::ToProto(NodeProto& proto) const
     proto.clear_attribute();
     for (auto attribute : attributes_)
     {
-        const gsl::not_null<AttributeProto*> attr(proto.add_attribute());
+        auto attr = proto.add_attribute();
         *attr = attribute.second;
     }
 
@@ -401,13 +401,13 @@ const NodeAttributes& Node::GetAttributes() const noexcept
 
 void Node::ForEachDef(std::function<void(const LotusIR::NodeArg*, bool is_input)> func) const
 {
-    for (const gsl::not_null<const LotusIR::NodeArg*> arg : InputDefs())
+    for (const LotusIR::NodeArg* arg : InputDefs())
     {
         if (!arg->Exists())
             continue;
         func(&*arg, true);
     }
-    for (const gsl::not_null<const LotusIR::NodeArg*> arg : OutputDefs())
+    for (const LotusIR::NodeArg* arg : OutputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -417,7 +417,7 @@ void Node::ForEachDef(std::function<void(const LotusIR::NodeArg*, bool is_input)
 
 void Node::ForEachInputDef(std::function<void(const LotusIR::NodeArg*)> func) const
 {
-    for (const gsl::not_null<const LotusIR::NodeArg*> arg : InputDefs())
+    for (const LotusIR::NodeArg* arg : InputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -427,7 +427,7 @@ void Node::ForEachInputDef(std::function<void(const LotusIR::NodeArg*)> func) co
 
 void Node::ForEachOutputDef(std::function<void(const LotusIR::NodeArg*)> func) const
 {
-    for (const gsl::not_null<const LotusIR::NodeArg*> arg : OutputDefs())
+    for (const LotusIR::NodeArg* arg : OutputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -543,7 +543,7 @@ Status GraphBase::VerifyNoDuplicateName(/*out*/ std::unordered_map<std::string, 
         node_name_to_index[node_name] = node.Index();
 
         // Verify node outputs' name should be unique.
-        for (const gsl::not_null<const NodeArg*> output_def : node.OutputDefs())
+        for (const NodeArg* output_def : node.OutputDefs())
         {
             auto& output_arg_name = output_def->Name();
             auto result = output_args.insert({output_arg_name, &node});
@@ -597,7 +597,7 @@ Status GraphBase::BuildConnections(const std::unordered_map<std::string, Node*>&
         {
             // This node needs inputs.
 
-            for (const gsl::not_null<const NodeArg*> input_arg : input_args)
+            for (const NodeArg* input_arg : input_args)
             {
                 if (!input_arg->Exists())
                 {
@@ -726,7 +726,7 @@ void GraphBase::ReverseDFSFrom(const std::vector<const Node*>& from,
                 sorted_nodes.push_back((*iter));
             }
             std::sort(sorted_nodes.begin(), sorted_nodes.end(), comp);
-            for (gsl::not_null<const LotusIR::Node*> in : sorted_nodes)
+            for (const LotusIR::Node* in : sorted_nodes)
             {
                 const NodeIndex idx = in->Index();
                 if (!visited[idx])
@@ -1250,7 +1250,7 @@ Status Graph::VerifyNodeAndOpMatch(const std::vector<NodeIndex>& nodes_in_topolo
 
         // currently an Op is required by ValidateVersion, so we use gsl::not_null.
         // This may change in the future to allow a null Op
-        const gsl::not_null<const OpSchema*> p_op = node.Op();
+        const OpSchema* p_op = node.Op();
 
         // Attribute verification and fill node attribute with
         // default value defined in operator definition if needed.
@@ -1318,7 +1318,7 @@ Status Graph::Resolve(bool no_proto_sync_required)
     return Status::OK();
 }
 
-Status GraphBase::GetNodesInTopologicalOrder(gsl::not_null<const std::vector<NodeIndex>**> pp_nodes) const
+Status GraphBase::GetNodesInTopologicalOrder(const std::vector<NodeIndex>** pp_nodes) const
 {
     if (graph_resolve_needed_)
     {
@@ -1436,7 +1436,7 @@ const std::vector<const NodeArg*>& Graph::GetValueInfo() const noexcept
 static void AddNodeArgs(const std::vector<NodeArg*>& input_args,
                         std::unordered_map<std::string, NodeArg*>& node_arg_map)
 {
-    for (const gsl::not_null<NodeArg*> input_arg : input_args)
+    for (const NodeArg* input_arg : input_args)
     {
         auto& key = input_arg->Name();
         auto existing_entry = node_arg_map.find(key);
@@ -1510,7 +1510,7 @@ Node* GraphBase::AddNode(const Node& other)
 Node* GraphBase::AddNode(const NodeProto& node_proto,
                          const ArgNameToTypeMap& name_to_type_map)
 {
-    const gsl::not_null<Node*> node = AllocateNode();
+    Node* node = AllocateNode();
 
     auto input_defs = CreateNodeArgs(node_proto.input(), name_to_type_map, node_args_, owned_node_args_);
     auto output_defs = CreateNodeArgs(node_proto.output(), name_to_type_map, node_args_, owned_node_args_);
@@ -1547,7 +1547,7 @@ Node* GraphBase::AddNode(const std::string& name,
     AddNodeArgs(input_args, node_args_);
     AddNodeArgs(output_args, node_args_);
 
-    const gsl::not_null<Node*> node = AllocateNode();
+    Node* node = AllocateNode();
     node->Init(name, op_type, description, input_args, output_args, attributes, domain);
     if (0 != op_type.compare(kNoOp))
     {
@@ -1567,7 +1567,7 @@ Node* GraphBase::AddConstantNode(const std::string& name,
                                  const std::vector<NodeArg*>& output_args,
                                  const TensorProto& tensor)
 {
-    const gsl::not_null<Node*> node = AddNode(name, kConstant, description, std::vector<NodeArg*>{}, output_args);
+    Node* node = AddNode(name, kConstant, description, std::vector<NodeArg*>{}, output_args);
     node->AddAttribute(kConstantValue, tensor);
     return node;
 }
@@ -1611,8 +1611,8 @@ const GraphProto& Graph::ToGraphProto()
             continue;
         }
 
-        const gsl::not_null<NodeProto*> node_proto = graph_proto_->add_node();
-        const gsl::not_null<Node*> p_node = GetNode(node_idx);
+        NodeProto* node_proto = graph_proto_->add_node();
+        Node* p_node = GetNode(node_idx);
         p_node->ToProto(*node_proto);
     }
 
@@ -1663,17 +1663,17 @@ void Graph::SyncGraphInputsOutputs()
     graph_proto_->clear_output();
     graph_proto_->clear_value_info();
 
-    for (const gsl::not_null<const LotusIR::NodeArg*> input_arg : GetInputs())
+    for (const LotusIR::NodeArg* input_arg : GetInputs())
     {
         *(graph_proto_->mutable_input()->Add()) = input_arg->ToProto();
     }
 
-    for (const gsl::not_null<const LotusIR::NodeArg*> output_arg : GetOutputs())
+    for (const LotusIR::NodeArg* output_arg : GetOutputs())
     {
         *(graph_proto_->mutable_output()->Add()) = output_arg->ToProto();
     }
 
-    for (const gsl::not_null<const LotusIR::NodeArg*> value_info : value_info_)
+    for (const LotusIR::NodeArg* value_info : value_info_)
     {
         *(graph_proto_->mutable_value_info()->Add()) = value_info->ToProto();
     }
@@ -1688,7 +1688,7 @@ void Graph::CleanInitializers()
     {
         const std::string& s = pv.first;
         if (std::none_of(inputs.begin(), inputs.end(),
-                         [&s](const gsl::not_null<const NodeArg*> input) noexcept->bool { return s == input->Name(); }))
+                         [&s](const NodeArg* input) noexcept->bool { return s == input->Name(); }))
         {
             wrong_names.push_back(s);
         }
@@ -1753,7 +1753,7 @@ Status Graph::SetGraphInputsOutputs()
         std::unordered_map<std::string, const NodeArg*> output_name_to_node_arg;
         for (const auto& node : Nodes())
         {
-            for (gsl::not_null<const NodeArg*> output_def : node.OutputDefs())
+            for (const NodeArg* output_def : node.OutputDefs())
             {
                 if (specified_graph_outputs.erase(output_def->Name()) >= 1)
                 {
@@ -1771,7 +1771,7 @@ Status Graph::SetGraphInputsOutputs()
         for (const auto& node : Nodes())
         {
             // Go thru all node's inputs.
-            for (const gsl::not_null<const NodeArg*> input_arg : node.InputDefs())
+            for (const NodeArg* input_arg : node.InputDefs())
             {
                 if (!input_arg->Exists())
                 {
@@ -1810,7 +1810,7 @@ Status Graph::SetGraphInputsOutputs()
         std::unordered_map<std::string, const NodeArg*> output_name_to_node_arg;
         for (const auto& node : Nodes())
         {
-            for (gsl::not_null<const NodeArg*> output_def : node.OutputDefs())
+            for (const NodeArg* output_def : node.OutputDefs())
             {
                 output_name_to_node_arg.insert({output_def->Name(), output_def});
             }
@@ -1823,7 +1823,7 @@ Status Graph::SetGraphInputsOutputs()
         for (const auto& node : Nodes())
         {
             // Go thru all node's inputs.
-            for (const gsl::not_null<const NodeArg*> input_arg : node.InputDefs())
+            for (const NodeArg* input_arg : node.InputDefs())
             {
                 if (!input_arg->Exists())
                 {
@@ -1885,7 +1885,7 @@ const Node* GraphBase::SinkNode() const
 
 // calling private ctor
 GSL_SUPPRESS(r .11)
-gsl::not_null<Node*> GraphBase::AllocateNode()
+Node* GraphBase::AllocateNode()
 {
     std::unique_ptr<Node> new_node(new Node(nodes_.size(), *this));
     Node* node{new_node.get()};

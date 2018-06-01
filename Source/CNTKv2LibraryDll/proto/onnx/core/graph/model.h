@@ -2,7 +2,7 @@
 
 #include "proto/onnx/core/graph/graph.h"
 
-#include "gsl/pointers"
+// #include "gsl/pointers"
 
 namespace LotusIR
 {
@@ -87,14 +87,14 @@ public:
 
     static Status Load(std::istream& model_istream, ModelProto* p_model_proto);
 
-    static Status Load(const std::string& file_path, /*out*/ gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
+    static Status Load(const std::string& file_path, /*out*/ std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
 
-    static Status Load(int fd, /*out*/ gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
+    static Status Load(int fd, /*out*/ std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
 
     // 'int' rather than 'size_t' because of a protobuf design choice; let callers handle type checks
-    static Status LoadFromBytes(int count, void* pBytes, /*out*/ gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
+    static Status LoadFromBytes(int count, void* pBytes, /*out*/ std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
 
-    static Status Load(const ModelProto& model_proto, gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
+    static Status Load(const ModelProto& model_proto, std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry = nullptr);
 
 private:
     // Set <domain_to_version_> and <model_proto_> to contain related domains

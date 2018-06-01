@@ -11,7 +11,7 @@
 #include "proto/onnx/core/graph/model.h"
 #include "proto/onnx/core/graph/utils.h"
 #include "proto/onnx/core/graph/schema_registry.h"
-#include "gsl/pointers"
+// #include "gsl/pointers"
 #include "gsl/gsl_util"
 
 namespace LotusIR
@@ -24,7 +24,7 @@ Model::Model(const std::string& graph_name, bool is_onnx_domain_only, const Mode
     model_metadata_ = model_metadata;
     for (auto& metadata : model_metadata_)
     {
-        const gsl::not_null<StringStringEntryProto*> prop = model_proto_->add_metadata_props();
+        StringStringEntryProto* prop = model_proto_->add_metadata_props();
         prop->set_key(metadata.first);
         prop->set_value(metadata.second);
     }
@@ -180,7 +180,7 @@ void Model::AddImportOpSets(bool is_onnx_domain_only, /*out*/ std::unordered_map
         }
 
         domain_to_version->insert({domainToVersionRange.first, max});
-        const gsl::not_null<OperatorSetIdProto*> opset_id_proto = model_proto_->add_opset_import();
+        OperatorSetIdProto* opset_id_proto = model_proto_->add_opset_import();
         opset_id_proto->set_domain(domainToVersionRange.first);
         opset_id_proto->set_version(domainToVersionRange.second.second);
     }
@@ -200,7 +200,7 @@ void Model::AddImportOpSets(bool is_onnx_domain_only, /*out*/ std::unordered_map
             if (domain_to_version_range_map.end() != domain_to_version_range_map.find(local_domain.first))
             {
                 domain_to_version->insert({local_domain.first, local_domain.second.second});
-                const gsl::not_null<OperatorSetIdProto*> opset_id_proto = model_proto_->add_opset_import();
+                OperatorSetIdProto* opset_id_proto = model_proto_->add_opset_import();
                 opset_id_proto->set_domain(local_domain.first);
                 opset_id_proto->set_version(local_domain.second.second);
             }
@@ -226,7 +226,7 @@ Status Model::Load(std::istream& model_istream, ModelProto* p_model_proto)
     return Status::OK();
 }
 
-Status Model::Load(const ModelProto& model_proto, gsl::not_null<std::shared_ptr<Model>*> model, const LotusOpSchemaRegistry* local_registry)
+Status Model::Load(const ModelProto& model_proto, std::shared_ptr<Model>* model, const LotusOpSchemaRegistry* local_registry)
 {
     // we expect a graph to be present
     if (!model_proto.has_graph())
@@ -266,7 +266,7 @@ Status Model::Save(Model& model, const std::wstring& file_path)
 
 #endif
 
-Status Model::Load(const std::string& file_path, gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry)
+Status Model::Load(const std::string& file_path, std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry)
 {
     int fd;
     RETURN_IF_ERROR(FileOpenRd(file_path, &fd));
@@ -275,7 +275,7 @@ Status Model::Load(const std::string& file_path, gsl::not_null<std::shared_ptr<M
     return status;
 }
 
-Status Model::LoadFromBytes(int count, void* p_bytes, /*out*/ gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry)
+Status Model::LoadFromBytes(int count, void* p_bytes, /*out*/ std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry)
 {
     std::unique_ptr<ModelProto> modelProto(new ModelProto);
     bool result = modelProto->ParseFromArray(p_bytes, count);
@@ -305,7 +305,7 @@ using ::google::protobuf::io::CodedInputStream;
 using ::google::protobuf::io::FileInputStream;
 using ::google::protobuf::io::ZeroCopyInputStream;
 
-Status Model::Load(int fd, gsl::not_null<std::shared_ptr<Model>*> p_model, const LotusOpSchemaRegistry* local_registry)
+Status Model::Load(int fd, std::shared_ptr<Model>* p_model, const LotusOpSchemaRegistry* local_registry)
 {
     if (fd < 0)
     {
