@@ -83,8 +83,6 @@ ifneq ($(HAS_MPI),0)
 CXX = $(MPI_PATH)/bin/mpic++
 endif
 
-g++ -v
-
 SSE_FLAGS = -msse4.1 -mssse3
 
 PROTOC = $(PROTOBUF_PATH)/bin/protoc
