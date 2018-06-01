@@ -1,5 +1,7 @@
+#include "proto/onnx/core/common/CommonSTD.h"
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/common/status.h"
+#include "proto/onnx/core/common/CommonSTD.h"
 
 namespace Lotus
 {

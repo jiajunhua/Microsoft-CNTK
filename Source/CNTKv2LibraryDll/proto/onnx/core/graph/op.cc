@@ -1,4 +1,5 @@
 #include <cstring>
+#include "proto/onnx/core/common/CommonSTD.h"
 #include "proto/onnx/core/graph/constants.h"
 #include "proto/onnx/core/graph/op.h"
 #include "proto/onnx/core/graph/utils.h"

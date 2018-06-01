@@ -430,13 +430,13 @@ void AddDataElementArrayViewToTensorProto(const NDArrayViewPtr src, int srcIndex
     CNTK::DataType dataType = src->GetDataType();
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
     {
         auto data = src->DataBuffer<float>();
         *(dst.mutable_float_data()->Add()) = data[srcIndex];
     }
     break;
-    case DataType::Double:
+    case CNTK::DataType::Double:
     {
         auto data = src->DataBuffer<double>();
         *(dst.mutable_double_data()->Add()) = data[srcIndex];
@@ -554,10 +554,10 @@ void SetTensorType(onnx::TensorProto& dst, CNTK::DataType dataType)
 {
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
         dst.set_data_type(onnx::TensorProto_DataType_FLOAT);
         break;
-    case DataType::Double:
+    case CNTK::DataType::Double:
         dst.set_data_type(onnx::TensorProto_DataType_DOUBLE);
         break;
     default:
@@ -590,13 +590,13 @@ void CNTKToONNXHelper::CopyTensorsWithCNTKToONNXLSTMWeightLayoutConversion(const
 
         switch (dataType)
         {
-        case DataType::Float:
+        case CNTK::DataType::Float:
         {
             auto data = srcTemp->DataBuffer<float>();
             AppendCNTKWeightToONNXTensor(data, srcShape, dst, stabilizer);
             break;
         }
-        case DataType::Double:
+        case CNTK::DataType::Double:
         {
             auto data = srcTemp->DataBuffer<double>();
             AppendCNTKWeightToONNXTensor(data, srcShape, dst, stabilizer);
@@ -631,7 +631,7 @@ void CNTKToONNXHelper::CopyTensorsWithMultipliers(const std::vector<NDArrayViewP
         srcTemp->ChangeDevice(DeviceDescriptor::CPUDevice());
         switch (dataType)
         {
-        case DataType::Float:
+        case CNTK::DataType::Float:
         {
             auto data = srcTemp->DataBuffer<float>();
             for (size_t index = 0; index < totalSize; index++)
@@ -639,7 +639,7 @@ void CNTKToONNXHelper::CopyTensorsWithMultipliers(const std::vector<NDArrayViewP
 
             break;
         }
-        case DataType::Double:
+        case CNTK::DataType::Double:
         {
             auto data = srcTemp->DataBuffer<double>();
             for (size_t index = 0; index < totalSize; index++)
@@ -682,12 +682,12 @@ void CNTKToONNXHelper::CopyRNNBiasTensors(const std::vector<NDArrayViewPtr> &src
         for (size_t index = 0; index < totalSize; index++)
             switch (dataType)
             {
-            case DataType::Float:
+            case CNTK::DataType::Float:
             {
                 *(dst.mutable_float_data()->Add()) = 0;
             }
             break;
-            case DataType::Double:
+            case CNTK::DataType::Double:
             {
                 *(dst.mutable_double_data()->Add()) = 0;
             }
@@ -840,7 +840,7 @@ void CNTKToONNXHelper::CopyTensor(const NDArrayViewPtr src, onnx::TensorProto& d
 
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
     {
         if (!inputArgType->has_tensor_type())
             dst.set_data_type(onnx::TensorProto_DataType_FLOAT);
@@ -863,7 +863,7 @@ void CNTKToONNXHelper::CopyTensor(const NDArrayViewPtr src, onnx::TensorProto& d
             }
         break;
     }
-    case DataType::Double:
+    case CNTK::DataType::Double:
     {
         dst.set_data_type(onnx::TensorProto_DataType_DOUBLE);
         auto data = srcTemp->DataBuffer<double>();
@@ -1115,10 +1115,10 @@ void CNTKToONNXHelper::UpdateONNXType(CNTK::DataType dataType, onnx::TypeProto &
 {
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
         type.mutable_tensor_type()->set_elem_type(onnx::TensorProto_DataType_FLOAT);
         break;
-    case DataType::Double:
+    case CNTK::DataType::Double:
         type.mutable_tensor_type()->set_elem_type(onnx::TensorProto_DataType_DOUBLE);
         break;
     default:
@@ -3531,7 +3531,7 @@ void CNTKToONNXHelper::FillTensorWithScalar(const std::vector<NDArrayViewPtr> &s
     int eachSrcSize = std::accumulate(dstShape.begin() + 1, dstShape.end(), 1, std::multiplies<int>());
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
     {
         for (int i = 0; i < srcs.size(); i++)
         {
@@ -3547,7 +3547,7 @@ void CNTKToONNXHelper::FillTensorWithScalar(const std::vector<NDArrayViewPtr> &s
 
         break;
     }
-    case DataType::Double:
+    case CNTK::DataType::Double:
     {
         for (int i = 0; i < srcs.size(); i++)
         {

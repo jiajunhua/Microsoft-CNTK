@@ -1,5 +1,6 @@
 #include "proto/onnx/core/common/logging/capture.h"
 #include "proto/onnx/core/common/logging/logging.h"
+#include "proto/onnx/core/common/CommonSTD.h"
 // #include "gsl/span"
 #include "gsl/gsl_util"
 

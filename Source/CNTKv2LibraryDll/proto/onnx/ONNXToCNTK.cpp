@@ -268,9 +268,9 @@ CNTK::DataType ONNXToCNTKHelper::FromONNXType(onnx::TypeProto type)
     case onnx::TensorProto_DataType_INT32:
     case onnx::TensorProto_DataType_BOOL:
     case onnx::TensorProto_DataType_FLOAT:
-        return DataType::Float;
+        return CNTK::DataType::Float;
     case onnx::TensorProto_DataType_DOUBLE:
-        return DataType::Double;
+        return CNTK::DataType::Double;
         break;
     default:
         NOT_IMPLEMENTED;
@@ -1297,13 +1297,13 @@ Variable ONNXToCNTKHelper::CreateLeafVariableOrConstant(const NodeArg *nodeArg,
     auto dataType = FromONNXType(nodeArg->ToProto().type());
     switch (dataType)
     {
-    case DataType::Float:
+    case CNTK::DataType::Float:
     {
-        return InputVariable(shape, DataType::Float, ToWString(nodeArg->Name()), dynamicAxes);
+        return InputVariable(shape, CNTK::DataType::Float, ToWString(nodeArg->Name()), dynamicAxes);
     }
-    case DataType::Double:
+    case CNTK::DataType::Double:
     {
-        return InputVariable(shape, DataType::Double, ToWString(nodeArg->Name()), dynamicAxes);
+        return InputVariable(shape, CNTK::DataType::Double, ToWString(nodeArg->Name()), dynamicAxes);
     }
     default:
         NOT_IMPLEMENTED;
@@ -1803,7 +1803,7 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
 {
     string onnxOpName = node->OpType();
 
-    if (onnxOpName == "Cast" && inputs[0].GetDataType() == DataType::Float && inputs[0].Owner() != nullptr)
+    if (onnxOpName == "Cast" && inputs[0].GetDataType() == CNTK::DataType::Float && inputs[0].Owner() != nullptr)
     {
         // CNTK does not support cast op. Only float is available with ONNX support.
         // Question for having a cast op: Why not cast data as necessary internally.
@@ -1871,8 +1871,8 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
     {
         double minValue = GetNamedAttributeAsFloat(node, "min");
         double maxValue = GetNamedAttributeAsFloat(node, "max");
-        Constant minVariable = Constant::Scalar(DataType::Float, minValue);
-        Constant maxVariable = Constant::Scalar(DataType::Float, maxValue);
+        Constant minVariable = Constant::Scalar(CNTK::DataType::Float, minValue);
+        Constant maxVariable = Constant::Scalar(CNTK::DataType::Float, maxValue);
         FunctionPtr cntkFunction = Clip(inputs[0], minVariable, maxVariable, ToWString(node->Name()));
         return cntkFunction;
     }
@@ -2033,8 +2033,8 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
         if (broadcast == 0 && hasSingletonDim) // Bad ONNX node - such model/node shouldn't be serializable in ONNX at all.
             LogicError("The rank of input C in GEMM operator (A*B + C) is not 2. Either specify a value with rank=2, or set the broadcast attribute to 1.");
 
-        FunctionPtr A = ElementTimes(input0, Constant(NDShape({1, 1}), DataType::Float, static_cast<double>(alpha)));
-        FunctionPtr C = ElementTimes(input2, Constant(NDShape({1, 1}), DataType::Float, static_cast<double>(beta)));
+        FunctionPtr A = ElementTimes(input0, Constant(NDShape({1, 1}), CNTK::DataType::Float, static_cast<double>(alpha)));
+        FunctionPtr C = ElementTimes(input2, Constant(NDShape({1, 1}), CNTK::DataType::Float, static_cast<double>(beta)));
         if (!transA && transB && broadcast) // Special case: Equivalent to FC (fully-connected) op. Takes in account broadcast of B, if needed.
         {
             return CreateCNTKFCNode(ToWString(node->Name()), {(Variable) A, input1, (Variable) C});
@@ -2058,7 +2058,7 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
         const NDShape &shape = GetNamedAttributeAsShape(node, "shape", false);
 
         // ONNX only has float type for random generators
-        DataType dataType = DataType::Float;
+        CNTK::DataType dataType = CNTK::DataType::Float;
 
         double low = GetNamedAttributeAsFloat(node, "low");
         double high = GetNamedAttributeAsFloat(node, "high");
@@ -2069,7 +2069,7 @@ FunctionPtr ONNXToCNTKHelper::CreateFunction(const Node *node, const std::vector
     else if (onnxOpName == "RandomNormal")
     {
         const NDShape &shape = GetNamedAttributeAsShape(node, "shape", false);
-        DataType dataType = DataType::Float;
+        CNTK::DataType dataType = CNTK::DataType::Float;
         double mean = GetNamedAttributeAsFloat(node, "mean");
         double scale = GetNamedAttributeAsFloat(node, "scale");
         unsigned long seed = GetNamedAttributeAsInt64(node, "seed");

@@ -4,6 +4,7 @@
 #include <numeric>
 #include <stack>
 
+#include "proto/onnx/core/common/CommonSTD.h"
 #include "graph.h"
 // #include "gsl/pointers"
 #include "op.h"

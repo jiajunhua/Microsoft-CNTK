@@ -7,6 +7,8 @@
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
+
+#include "proto/onnx/core/common/CommonSTD.h"
 #include <google/protobuf/io/zero_copy_stream_impl.h>
 #include "proto/onnx/core/graph/model.h"
 #include "proto/onnx/core/graph/utils.h"

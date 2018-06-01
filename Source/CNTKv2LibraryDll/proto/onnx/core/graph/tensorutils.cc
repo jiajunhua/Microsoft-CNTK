@@ -1,3 +1,4 @@
+#include "proto/onnx/core/common/CommonSTD.h"
 #include "proto/onnx/core/graph/tensorutils.h"
 
 #include <algorithm>

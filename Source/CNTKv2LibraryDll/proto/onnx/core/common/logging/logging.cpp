@@ -1,5 +1,5 @@
 #include <exception>
-
+#include "proto/onnx/core/common/CommonSTD.h"
 #include "proto/onnx/core/common/exceptions.h"
 #include "proto/onnx/core/common/logging/isink.h"
 #include "proto/onnx/core/common/logging/logging.h"
