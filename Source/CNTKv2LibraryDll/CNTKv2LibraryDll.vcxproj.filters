@@ -63,9 +63,6 @@
     <ClCompile Include="proto\onnx\core\common\logging\capture.cpp">
       <Filter>proto\onnx\core\common\logging</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\onnx\checker.cc">
-      <Filter>proto\onnx\onnx</Filter>
-    </ClCompile>
     <ClCompile Include="proto\onnx\onnx\protobuf\onnx-ml.pb.cc.VS_wrapper.cpp">
       <Filter>proto\onnx\onnx\protobuf</Filter>
     </ClCompile>
@@ -108,32 +105,35 @@
     <ClCompile Include="proto\onnx\core\graph\graph.cpp">
       <Filter>proto\onnx\core\graph</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\core\graph\graph_transformer.cc">
-      <Filter>proto\onnx\core\graph</Filter>
-    </ClCompile>
-    <ClCompile Include="proto\onnx\core\graph\model.cc">
-      <Filter>proto\onnx\core\graph</Filter>
-    </ClCompile>
-    <ClCompile Include="proto\onnx\core\graph\op.cc">
-      <Filter>proto\onnx\core\graph</Filter>
-    </ClCompile>
-    <ClCompile Include="proto\onnx\core\graph\tensorutils.cc">
-      <Filter>proto\onnx\core\graph</Filter>
-    </ClCompile>
     <ClCompile Include="proto\onnx\onnx\protobuf\onnx-operators-ml.pb.cc.VS_wrapper.cpp">
       <Filter>proto\onnx\onnx\protobuf</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\onnx\defs\math\old.cc">
+    <ClCompile Include="proto\onnx\core\graph\model.cpp">
+      <Filter>proto\onnx\core\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\core\graph\op.cpp">
+      <Filter>proto\onnx\core\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\core\graph\tensorutils.cpp">
+      <Filter>proto\onnx\core\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\core\graph\graph_transformer.cpp">
+      <Filter>proto\onnx\core\graph</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\onnx\defs\math\old.cpp">
       <Filter>proto\onnx\onnx\defs\math</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\onnx\defs\nn\old.cc">
+    <ClCompile Include="proto\onnx\onnx\defs\nn\old.cpp">
       <Filter>proto\onnx\onnx\defs\nn</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\onnx\defs\tensor\old.cc">
+    <ClCompile Include="proto\onnx\onnx\defs\rnn\old.cpp">
+      <Filter>proto\onnx\onnx\defs\rnn</Filter>
+    </ClCompile>
+    <ClCompile Include="proto\onnx\onnx\defs\tensor\old.cpp">
       <Filter>proto\onnx\onnx\defs\tensor</Filter>
     </ClCompile>
-    <ClCompile Include="proto\onnx\onnx\defs\rnn\old.cc">
-      <Filter>proto\onnx\onnx\defs\rnn</Filter>
+    <ClCompile Include="proto\onnx\onnx\checker.cpp">
+      <Filter>proto\onnx\onnx</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
