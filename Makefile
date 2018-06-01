@@ -83,6 +83,8 @@ ifneq ($(HAS_MPI),0)
 CXX = $(MPI_PATH)/bin/mpic++
 endif
 
+g++ -v
+
 SSE_FLAGS = -msse4.1 -mssse3
 
 PROTOC = $(PROTOBUF_PATH)/bin/protoc
@@ -540,6 +542,7 @@ CNTKLIBRARY_COMMON_SRC =\
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/data_type_utils.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/schema.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/protobuf/onnx-ml.pb.cc \
+	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/protobuf/onnx-operators-ml.pb.cc \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/checker.cc \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/Operators.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/RNNHelper.cpp \
