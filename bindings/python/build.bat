@@ -8,6 +8,14 @@ if not defined VS2017INSTALLDIR (
   goto FIN
 )
 
+if not exist "%VS2017INSTALLDIR%\VC\Auxiliary\build\vcvarsall.bat" (
+  echo Error: "%VS2017INSTALLDIR%\VC\Auxiliary\build\vcvarsall.bat" not found.
+  echo Make sure you have installed Visual Studion 2017 correctly.
+  goto FIN
+)
+
+call "%VS2017INSTALLDIR%\VC\Auxiliary\build\vcvarsall.bat" amd64 -vcvars_ver=14.11
+
 set MSSdk=1
 set DISTUTILS_USE_SDK=1
 set CNTK_VERSION=2.5.1
@@ -17,7 +25,7 @@ set CNTK_COMPONENT_VERSION=%CNTK_VERSION%
 python .\setup.py build_ext --inplace --force --compiler msvc
 if errorlevel 1 exit /b 1
 
-set PATH=%CD%\..\..\x64\Release_NoOpt;%PATH%
+set PATH=%CD%\..\..\x64\Release;%PATH%
 set PYTHONPATH=%CD%;%CD%\..\..\Scripts;%CD%\examples;%PYTHONPATH%
 
 pushd cntk\tests
