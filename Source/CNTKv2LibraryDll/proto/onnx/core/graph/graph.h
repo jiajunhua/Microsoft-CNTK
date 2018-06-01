@@ -189,7 +189,7 @@ public:
     }
 
     // CNTK_TODO: need a way to edit a graph - e.g. to insert a node.
-    std::vector<NodeArg*>& Node::Mutable_OutputDefs()
+    std::vector<NodeArg*>& Mutable_OutputDefs()
     {
         return definitions_.output_defs;
     }
