@@ -8,11 +8,11 @@
 #include <mutex>
 #include <string>
 
-#include "proto\onnx\core/common/common.h"
-#include "proto\onnx\core/common/logging/capture.h"
-#include "proto\onnx\core/common/logging/severity.h"
+#include "proto/onnx/core/common/common.h"
+#include "proto/onnx/core/common/logging/capture.h"
+#include "proto/onnx/core/common/logging/severity.h"
 
-#include "proto\onnx\core/common/logging/macros.h"
+#include "proto/onnx/core/common/logging/macros.h"
 
 /*
 

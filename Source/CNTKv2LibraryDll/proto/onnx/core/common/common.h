@@ -32,9 +32,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include "proto\onnx/core/common/code_location.h"
-#include "proto\onnx/core/common/exceptions.h"
-#include "proto\onnx/core/common/status.h"
+#include "proto/onnx/core/common/code_location.h"
+#include "proto/onnx/core/common/exceptions.h"
+#include "proto/onnx/core/common/status.h"
 
 namespace Lotus
 {

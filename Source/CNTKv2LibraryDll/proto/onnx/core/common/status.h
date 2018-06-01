@@ -2,7 +2,7 @@
 
 #include <memory>
 #include <string>
-#include "proto\onnx/core/inc/ml_status.h"
+#include "proto/onnx/core/inc/ml_status.h"
 
 namespace Lotus
 {

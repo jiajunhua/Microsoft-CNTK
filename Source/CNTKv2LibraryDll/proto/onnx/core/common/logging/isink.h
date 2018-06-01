@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "proto\onnx/core/common/logging/logging.h"
+#include "proto/onnx/core/common/logging/logging.h"
 
 namespace Lotus
 {

@@ -7,8 +7,8 @@
 #include <string>
 #include <vector>
 
-#include "proto\onnx/core/common/common.h"
-#include "proto\onnx/core/common/code_location.h"
+#include "proto/onnx/core/common/common.h"
+#include "proto/onnx/core/common/code_location.h"
 
 namespace Lotus
 {

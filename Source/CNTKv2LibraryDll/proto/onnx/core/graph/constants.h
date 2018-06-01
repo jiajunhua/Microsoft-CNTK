@@ -4,7 +4,7 @@
 #include <unordered_set>
 #include <vector>
 
-#include "proto\onnx\core/common/common.h"
+#include "proto/onnx/core/common/common.h"
 
 namespace LotusIR
 {
