@@ -4,7 +4,7 @@
 #include "proto/onnx/core/common/logging/isink.h"
 #include "proto/onnx/core/common/logging/logging.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Logging
 {
@@ -183,8 +183,8 @@ std::exception LoggingManager::LogFatalAndCreateException(const char *category,
 
     // create Capture in separate scope so it gets destructed (leading to log output) before we throw.
     {
-        Lotus::Logging::Capture c{Lotus::Logging::LoggingManager::DefaultLogger(),
-                                  Lotus::Logging::Severity::kFATAL, category, Lotus::Logging::DataType::SYSTEM, location};
+        ONNX::Logging::Capture c{ONNX::Logging::LoggingManager::DefaultLogger(),
+                                  ONNX::Logging::Severity::kFATAL, category, ONNX::Logging::DataType::SYSTEM, location};
         va_list args;
         va_start(args, format_str);
 
@@ -197,4 +197,4 @@ std::exception LoggingManager::LogFatalAndCreateException(const char *category,
     return LotusException(location, exception_msg);
 }
 } // namespace Logging
-} // namespace Lotus
+} // namespace ONNX

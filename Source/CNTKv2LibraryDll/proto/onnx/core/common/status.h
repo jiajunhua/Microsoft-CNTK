@@ -5,7 +5,7 @@
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/inc/ml_status.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Common
 {
@@ -22,7 +22,7 @@ enum StatusCategory
 {
     NONE = 0,
     SYSTEM = 1,
-    LOTUS = 2,
+    ONNX = 2,
 };
 
 // Error code for lotus.
@@ -117,4 +117,4 @@ inline std::ostream& operator<<(std::ostream& out, const Status& status)
 }
 
 } // namespace Common
-} // namespace Lotus
+} // namespace ONNX

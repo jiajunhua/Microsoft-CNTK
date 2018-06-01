@@ -4,7 +4,7 @@
 #include "proto/onnx/core/graph/graph.h"
 #include "proto/onnx/core/graph/rewrite_rule.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 
 // A graph transformer interface. A graph transformer transforms a graph in-place.
@@ -110,4 +110,4 @@ private:
     const unsigned steps_;
 };
 
-} // namespace LotusIR
+} // namespace ONNXIR

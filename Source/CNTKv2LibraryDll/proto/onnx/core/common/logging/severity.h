@@ -1,9 +1,9 @@
 #pragma once
 
-namespace Lotus {
+namespace ONNX {
 namespace Logging {
 // mild violation of naming convention. the 'k' lets us use token concatenation in the macro
-// Lotus::Logging::Severity::k##severity. It's not legal to have Lotus::Logging::Severity::##severity
+// ONNX::Logging::Severity::k##severity. It's not legal to have ONNX::Logging::Severity::##severity
 // the uppercase makes the LOG macro usage look as expected for passing an enum value as it will be LOGS(logger, ERROR)
 enum class Severity {
   kVERBOSE = 0,
@@ -16,4 +16,4 @@ enum class Severity {
 const char SEVERITY_PREFIX[] = "VIWEF";
 
 }  // namespace Logging
-}  // namespace Lotus
+}  // namespace ONNX

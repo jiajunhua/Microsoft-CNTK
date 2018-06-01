@@ -4,7 +4,7 @@
 // #include "gsl/span"
 #include "gsl/gsl_util"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Logging
 {
@@ -57,4 +57,4 @@ Capture::~Capture()
     }
 }
 } // namespace Logging
-} // namespace Lotus
+} // namespace ONNX

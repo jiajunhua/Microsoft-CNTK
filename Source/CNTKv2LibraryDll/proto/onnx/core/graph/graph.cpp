@@ -16,7 +16,7 @@
 using namespace onnx::Utils;
 using namespace onnx::checker;
 
-namespace LotusIR
+namespace ONNXIR
 {
 
 #define NO_CHANGE_ON_SYNC_FLAG(...)                      \
@@ -186,7 +186,7 @@ const std::string& Node::GetExecutionProviderType() const noexcept
     return execution_provider_type_;
 }
 
-void Node::SetExecutionProviderType(LotusIR::ProviderType execution_provider_type)
+void Node::SetExecutionProviderType(ONNXIR::ProviderType execution_provider_type)
 {
     execution_provider_type_ = execution_provider_type;
 }
@@ -341,7 +341,7 @@ Status Node::UpdateInputArgCount()
 
     if (total_arg_count != definitions_.input_defs.size())
     {
-        Status status(LOTUS, FAIL,
+        Status status(StatusCategory::ONNX, FAIL,
                       "The sum of input arg count is not equal to size of input defs in node (" + name_ + ").");
         return status;
     }
@@ -400,15 +400,15 @@ const NodeAttributes& Node::GetAttributes() const noexcept
     return attributes_;
 }
 
-void Node::ForEachDef(std::function<void(const LotusIR::NodeArg*, bool is_input)> func) const
+void Node::ForEachDef(std::function<void(const ONNXIR::NodeArg*, bool is_input)> func) const
 {
-    for (const LotusIR::NodeArg* arg : InputDefs())
+    for (const ONNXIR::NodeArg* arg : InputDefs())
     {
         if (!arg->Exists())
             continue;
         func(&*arg, true);
     }
-    for (const LotusIR::NodeArg* arg : OutputDefs())
+    for (const ONNXIR::NodeArg* arg : OutputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -416,9 +416,9 @@ void Node::ForEachDef(std::function<void(const LotusIR::NodeArg*, bool is_input)
     }
 };
 
-void Node::ForEachInputDef(std::function<void(const LotusIR::NodeArg*)> func) const
+void Node::ForEachInputDef(std::function<void(const ONNXIR::NodeArg*)> func) const
 {
-    for (const LotusIR::NodeArg* arg : InputDefs())
+    for (const ONNXIR::NodeArg* arg : InputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -426,9 +426,9 @@ void Node::ForEachInputDef(std::function<void(const LotusIR::NodeArg*)> func) co
     }
 };
 
-void Node::ForEachOutputDef(std::function<void(const LotusIR::NodeArg*)> func) const
+void Node::ForEachOutputDef(std::function<void(const ONNXIR::NodeArg*)> func) const
 {
-    for (const LotusIR::NodeArg* arg : OutputDefs())
+    for (const ONNXIR::NodeArg* arg : OutputDefs())
     {
         if (!arg->Exists())
             continue;
@@ -436,7 +436,7 @@ void Node::ForEachOutputDef(std::function<void(const LotusIR::NodeArg*)> func) c
     }
 };
 
-void Node::ReplaceDefs(const std::map<LotusIR::NodeArg*, LotusIR::NodeArg*>& replacements)
+void Node::ReplaceDefs(const std::map<ONNXIR::NodeArg*, ONNXIR::NodeArg*>& replacements)
 {
     std::vector<std::vector<NodeArg*>*> all_defs = {&definitions_.input_defs, &definitions_.output_defs};
 
@@ -536,7 +536,7 @@ Status GraphBase::VerifyNoDuplicateName(/*out*/ std::unordered_map<std::string, 
         if (!node_name.empty() && node_name_to_index.end() != node_name_to_index.find(node_name))
         {
             // The node has name and its name was used by another node.
-            Status status(LOTUS, FAIL,
+            Status status(StatusCategory::ONNX, FAIL,
                           "Error: two nodes with same node name (" + node_name + ").");
             return status;
         }
@@ -551,7 +551,7 @@ Status GraphBase::VerifyNoDuplicateName(/*out*/ std::unordered_map<std::string, 
             if (!result.second)
             {
                 // Two outputs with same name, so that insertion fails.
-                Status status(LOTUS, FAIL,
+                Status status(StatusCategory::ONNX, FAIL,
                               "Error: two output args with same name (" + output_arg_name + ").");
                 return status;
             }
@@ -578,7 +578,7 @@ Status GraphBase::BuildConnections(const std::unordered_map<std::string, Node*>&
             auto name_to_index_iter = node_name_to_index.find(control_input);
             if (node_name_to_index.end() == name_to_index_iter)
             {
-                Status status(LOTUS, FAIL,
+                Status status(StatusCategory::ONNX, FAIL,
                               "The control input (" + control_input + ") of Node (" +
                                   node.Name() + ") does not exist in the graph.");
                 return status;
@@ -727,7 +727,7 @@ void GraphBase::ReverseDFSFrom(const std::vector<const Node*>& from,
                 sorted_nodes.push_back((*iter));
             }
             std::sort(sorted_nodes.begin(), sorted_nodes.end(), comp);
-            for (const LotusIR::Node* in : sorted_nodes)
+            for (const ONNXIR::Node* in : sorted_nodes)
             {
                 const NodeIndex idx = in->Index();
                 if (!visited[idx])
@@ -809,7 +809,7 @@ Status GraphBase::CheckIsAcyclic(std::vector<NodeIndex>& nodes_in_topological_or
             const NodeIndex idx = (*iter)->Index();
             if (ancestor_nodes.end() != ancestor_nodes.find(idx))
             {
-                Status status(LOTUS, FAIL, "Error: the graph is not acyclic.");
+                Status status(StatusCategory::ONNX, FAIL, "Error: the graph is not acyclic.");
                 return status;
             }
 
@@ -827,7 +827,7 @@ Status GraphBase::CheckIsAcyclic(std::vector<NodeIndex>& nodes_in_topological_or
     }
     else
     {
-        return Status(LOTUS, FAIL, "Error: the graph is not acyclic.");
+        return Status(StatusCategory::ONNX, FAIL, "Error: the graph is not acyclic.");
     }
 }
 
@@ -920,7 +920,7 @@ private:
 
 // A wrapper for invoking ONNX-defined shape+type inference for a single node.
 // Returns inferred shape+type for every output of the node in output parameter inferredShapes.
-Status GraphBase::InferOutputTypesAndShapes(LotusIR::Node& node, std::vector<TypeProto>& inferred_shapes)
+Status GraphBase::InferOutputTypesAndShapes(ONNXIR::Node& node, std::vector<TypeProto>& inferred_shapes)
 {
     inferred_shapes.clear();
     inferred_shapes.resize(node.OutputDefs().size());
@@ -993,7 +993,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
                 {
                     // This input is fed by callers and its type has to be specified.
 
-                    Status status(LOTUS, FAIL,
+                    Status status(StatusCategory::ONNX, FAIL,
                                   "Node (" + nodeName + ") input arg (" +
                                       input_def->Name() + ") does not have type information.");
                     return status;
@@ -1006,7 +1006,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
                 if (input_def->Type() == nullptr)
                 {
                     // Logic error: This should not happen.
-                    Status status(LOTUS, FAIL,
+                    Status status(StatusCategory::ONNX, FAIL,
                                   "Node (" + nodeName + ") input arg (" +
                                       input_def->Name() + ") does not have type information set by parent node.");
                     return status;
@@ -1019,7 +1019,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
             if (0 == permitted_types.count(input_type))
             {
                 // Type error in input model/graph.
-                Status status(LOTUS, FAIL,
+                Status status(StatusCategory::ONNX, FAIL,
                               "Type Error: Type of input parameter (" + input_def->Name() +
                                   ") of operator (" + op.Name() + ") in node (" + nodeName + ") is invalid.");
                 return status;
@@ -1042,7 +1042,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
                 // However, this will need to be extended to handle the If-Then-Else and Loop
                 // constructs in future which will have variadic inputs and outputs of different types.
 
-                Status status(LOTUS, FAIL,
+                Status status(StatusCategory::ONNX, FAIL,
                               "Type Error: Type parameter (" + op_formal_parameter.GetTypeStr() +
                                   ") bound to different types (" + *(param_to_type_iter->second) +
                                   " and " + *(input_def->Type()) +
@@ -1060,7 +1060,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
     }
     catch (const std::exception& ex)
     {
-        return Status(LOTUS, FAIL, ex.what());
+        return Status(StatusCategory::ONNX, FAIL, ex.what());
     }
 
     // Infer and verify node output arg type information.
@@ -1107,7 +1107,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
         else
         {
             // This should not happen: indicates incompleteness in ONNX inference.
-            Status status(LOTUS, FAIL,
+            Status status(StatusCategory::ONNX, FAIL,
                           "Node (" + nodeName + ") output arg (" + output_def->Name() + ") type inference failed");
             return status;
         }
@@ -1115,7 +1115,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
         if ((existing_type != inferred_type) && (existing_type != nullptr))
         {
             // A type exists for this output but does not match the inferred type.
-            return Status(LOTUS, FAIL,
+            return Status(StatusCategory::ONNX, FAIL,
                           "Type Error: Type (" + *existing_type + ") of output arg (" +
                               output_def->Name() + ") of node (" + nodeName +
                               ") does not match expected type (" + *inferred_type + ").");
@@ -1135,7 +1135,7 @@ Status Graph::InferAndVerifyTypeMatch(Node& node,
     }
 
     return Status::OK();
-} // namespace LotusIR
+} // namespace ONNXIR
 
 #define enforce_non_empty_field(proto, field)     \
     do                                            \
@@ -1242,7 +1242,7 @@ Status Graph::VerifyNodeAndOpMatch(const std::vector<NodeIndex>& nodes_in_topolo
             }
             catch (const std::exception& ex)
             {
-                return Status(LOTUS, FAIL, ex.what());
+                return Status(StatusCategory::ONNX, FAIL, ex.what());
             }
             node.op_ = OpSchemaRegistry::Schema(node.OpType(), maxInclusiveVersion, node.Domain());
         }
@@ -1274,7 +1274,7 @@ Status Graph::VerifyNodeAndOpMatch(const std::vector<NodeIndex>& nodes_in_topolo
                 }
                 else
                 {
-                    Status status(LOTUS, FAIL,
+                    Status status(StatusCategory::ONNX, FAIL,
                                   "Node (" + node_name + ") attribute (" + attr_def.first +
                                       ") is required but not specified.");
                     return status;
@@ -1323,7 +1323,7 @@ Status GraphBase::GetNodesInTopologicalOrder(const std::vector<NodeIndex>** pp_n
 {
     if (graph_resolve_needed_)
     {
-        return Status{StatusCategory::LOTUS, StatusCode::FAIL,
+        return Status{StatusCategory::ONNX, StatusCode::FAIL,
                       "Resolve() must be called before using the graph as modifications have been made to it."};
     }
 
@@ -1664,17 +1664,17 @@ void Graph::SyncGraphInputsOutputs()
     graph_proto_->clear_output();
     graph_proto_->clear_value_info();
 
-    for (const LotusIR::NodeArg* input_arg : GetInputs())
+    for (const ONNXIR::NodeArg* input_arg : GetInputs())
     {
         *(graph_proto_->mutable_input()->Add()) = input_arg->ToProto();
     }
 
-    for (const LotusIR::NodeArg* output_arg : GetOutputs())
+    for (const ONNXIR::NodeArg* output_arg : GetOutputs())
     {
         *(graph_proto_->mutable_output()->Add()) = output_arg->ToProto();
     }
 
-    for (const LotusIR::NodeArg* value_info : value_info_)
+    for (const ONNXIR::NodeArg* value_info : value_info_)
     {
         *(graph_proto_->mutable_value_info()->Add()) = value_info->ToProto();
     }
@@ -1766,7 +1766,7 @@ Status Graph::SetGraphInputsOutputs()
 
         if (specified_graph_outputs.size() != 0)
         {
-            return Status(LOTUS, FAIL, "Some graph outputs which don't exist in the graph.");
+            return Status(StatusCategory::ONNX, FAIL, "Some graph outputs which don't exist in the graph.");
         }
 
         for (const auto& node : Nodes())
@@ -1796,7 +1796,7 @@ Status Graph::SetGraphInputsOutputs()
                 {
                     // The node input is not specified as graph input,
                     // and it's not fed by another node neither.
-                    return Status(LOTUS, FAIL, "Node input (" + input_arg->Name() + ") should be a graph input.");
+                    return Status(StatusCategory::ONNX, FAIL, "Node input (" + input_arg->Name() + ") should be a graph input.");
                 }
 
                 if (specified_graph_value_info.erase(input_arg->Name()) >= 1)
@@ -1917,4 +1917,4 @@ bool GraphBase::ReleaseNode(NodeIndex index)
 
     return true;
 }
-} // namespace LotusIR
+} // namespace ONNXIR

@@ -8,8 +8,6 @@
 #include "stdafx.h"
 #include "CNTKLibrary.h"
 
-#define ONNXIR LotusIR
-
 namespace ONNXIR
 {
     class Graph;

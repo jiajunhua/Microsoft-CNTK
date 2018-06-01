@@ -4,7 +4,7 @@
 #include <algorithm>
 // #include "gsl/span"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Utils
 {
@@ -14,11 +14,11 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
 {
     if (onnx::TensorProto_DataType_STRING != tensor.data_type() || nullptr == p_data)
     {
-        return Status(StatusCategory::LOTUS, StatusCode::INVALID_ARGUMENT);
+        return Status(StatusCategory::ONNX, StatusCode::INVALID_ARGUMENT);
     }
 
     if (tensor.string_data_size() != expected_size)
-        return Status(StatusCategory::LOTUS, StatusCode::FAIL,
+        return Status(StatusCategory::ONNX, StatusCode::FAIL,
                       "UnpackTensor: the pre-allocate size does not match the size in proto");
 
     for (auto& elem : tensor.string_data()) {
@@ -34,13 +34,13 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
 {
     if (onnx::TensorProto_DataType_BOOL != tensor.data_type() || nullptr == p_data)
     {
-        return Status(StatusCategory::LOTUS, StatusCode::INVALID_ARGUMENT);
+        return Status(StatusCategory::ONNX, StatusCode::INVALID_ARGUMENT);
     }
 
     if (tensor.has_raw_data())
     {
         if (tensor.raw_data().size() != (expected_size) * sizeof(bool))
-            return Status(StatusCategory::LOTUS, StatusCode::FAIL,
+            return Status(StatusCategory::ONNX, StatusCode::FAIL,
                           "UnpackTensor: the pre-allocate size does not match the raw data size");
 
         UnpackTensorWithRawData(tensor, p_data);
@@ -48,7 +48,7 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
     }
 
     if (tensor.int32_data_size() != expected_size)
-        return Status(StatusCategory::LOTUS, StatusCode::FAIL,
+        return Status(StatusCategory::ONNX, StatusCode::FAIL,
                       "UnpackTensor: the pre-allocate size does not match the size in proto");
 
     for (auto& elem : tensor.int32_data()) {
@@ -58,4 +58,4 @@ Status TensorUtils::UnpackTensor(const onnx::TensorProto& tensor,
     return Status::OK();
 }
 } // namespace Utils
-} // namespace Lotus
+} // namespace ONNX

@@ -1,7 +1,7 @@
 #include "proto/onnx/core/common/CommonSTD.h"
 #include "proto/onnx/core/graph/graph_transformer.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 
 Status GraphTransformerManager::ApplyAll(Graph* graph)
@@ -23,4 +23,4 @@ Status GraphTransformerManager::ApplyAll(Graph* graph)
     return Status::OK();
 }
 
-} // namespace LotusIR
+} // namespace ONNXIR

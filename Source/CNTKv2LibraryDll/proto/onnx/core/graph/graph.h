@@ -29,7 +29,7 @@ using namespace onnx;
 
 typedef std::unordered_map<std::string, AttributeProto> NodeAttributes;
 
-namespace LotusIR
+namespace ONNXIR
 {
 typedef size_t NodeIndex;
 typedef int64_t Version;
@@ -258,16 +258,16 @@ public:
     void ToProto(NodeProto& proto) const;
 
     // iterate through all input/output defs
-    void ForEachDef(std::function<void(const LotusIR::NodeArg*, bool is_input)> func) const;
+    void ForEachDef(std::function<void(const ONNXIR::NodeArg*, bool is_input)> func) const;
 
     // iterate through all input defs
-    void ForEachInputDef(std::function<void(const LotusIR::NodeArg*)> func) const;
+    void ForEachInputDef(std::function<void(const ONNXIR::NodeArg*)> func) const;
 
     // iterate through all output defs
-    void ForEachOutputDef(std::function<void(const LotusIR::NodeArg*)> func) const;
+    void ForEachOutputDef(std::function<void(const ONNXIR::NodeArg*)> func) const;
 
     // Replaces defs
-    void ReplaceDefs(const std::map<LotusIR::NodeArg*, LotusIR::NodeArg*>& replacements);
+    void ReplaceDefs(const std::map<ONNXIR::NodeArg*, ONNXIR::NodeArg*>& replacements);
 
     // Node definitions. Really a struct but we want to prevent accidental copies.
     class Definitions
@@ -688,7 +688,7 @@ protected:
     // invoking ONNX-defined shape+type inference for a single node.
     // Returns the inferred shape+type for every output of the node in
     // output parameter inferredShapes.
-    Status InferOutputTypesAndShapes(LotusIR::Node& node,
+    Status InferOutputTypesAndShapes(ONNXIR::Node& node,
                                      /*out*/ std::vector<TypeProto>& inferred_shapes);
 
 private:
@@ -868,4 +868,4 @@ private:
 
     const LotusOpSchemaRegistry* local_registry_;
 };
-} // namespace LotusIR
+} // namespace ONNXIR

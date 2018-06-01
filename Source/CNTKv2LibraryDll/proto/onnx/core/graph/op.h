@@ -7,9 +7,9 @@
 #include "proto/onnx/core/graph/constants.h"
 
 using namespace onnx;
-using namespace Lotus::Common;
+using namespace ONNX::Common;
 
-namespace LotusIR
+namespace ONNXIR
 {
 typedef AttributeProto_AttributeType AttrType;
 typedef std::unordered_map<std::string, AttributeProto> NodeAttributes;
@@ -65,4 +65,4 @@ private:
     // static Status RegisterMsNNOps();
 };
 
-} // namespace LotusIR
+} // namespace ONNXIR

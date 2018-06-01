@@ -46,7 +46,7 @@ A sink can do further filter as needed.
 
 */
 
-namespace Lotus
+namespace ONNX
 {
 namespace Logging
 {
@@ -268,4 +268,4 @@ inline Timestamp LoggingManager::GetTimestamp() const noexcept
 }
 
 } // namespace Logging
-} // namespace Lotus
+} // namespace ONNX

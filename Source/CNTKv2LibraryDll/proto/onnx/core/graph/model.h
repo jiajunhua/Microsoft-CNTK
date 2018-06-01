@@ -4,7 +4,7 @@
 
 // #include "gsl/pointers"
 
-namespace LotusIR
+namespace ONNXIR
 {
 typedef std::unordered_map<std::string, std::string> ModelMetaData;
 
@@ -56,7 +56,7 @@ public:
     // Return null pointer if not specified.
     Version ModelVersion() const;
     // Set models' version.
-    void SetModelversion(LotusIR::Version model_version);
+    void SetModelversion(ONNXIR::Version model_version);
 
     // Get model's doc string.
     // Return null pointer if not specified.
@@ -113,4 +113,4 @@ private:
     // Main graph of the model.
     std::unique_ptr<Graph> graph_;
 };
-} // namespace LotusIR
+} // namespace ONNXIR

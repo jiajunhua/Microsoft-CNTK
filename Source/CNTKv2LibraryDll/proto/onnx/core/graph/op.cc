@@ -4,7 +4,7 @@
 #include "proto/onnx/core/graph/op.h"
 #include "proto/onnx/core/graph/utils.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 
 bool TypeUtils::IsValidAttribute(const AttributeProto& attr)
@@ -40,7 +40,7 @@ Status TypeUtils::GetType(const AttributeProto& attr, AttrType& type)
 {
     if (!TypeUtils::IsValidAttribute(attr))
     {
-        return Status(LOTUS, FAIL, "Invalid AttributeProto.");
+        return Status(StatusCategory::ONNX, FAIL, "Invalid AttributeProto.");
     }
 
     type = attr.type();
@@ -88,9 +88,9 @@ Status TypeUtils::GetType(const AttributeProto& attr, AttrType& type)
         }
         else
         {
-            return Status(LOTUS, FAIL, "Invalid AttributeProto.");
+            return Status(StatusCategory::ONNX, FAIL, "Invalid AttributeProto.");
         }
     }
     return Status::OK();
 }
-} // namespace LotusIR
+} // namespace ONNXIR

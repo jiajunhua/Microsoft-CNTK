@@ -406,7 +406,7 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
     {
         // It does not work using vector<bool> because resulted memory layout is not what we expect.
         bool *srcData = new bool[shape.TotalSize()];
-        Lotus::Utils::TensorUtils::UnpackTensor(valueProto, srcData, shape.TotalSize());
+        ::ONNX::Utils::TensorUtils::UnpackTensor(valueProto, srcData, shape.TotalSize());
 
         // CNTK does not support bool. We need to convert to float.
         std::vector<float> srcFloatData(shape.TotalSize());
@@ -421,7 +421,7 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
     case TensorProto_DataType_INT32:
     {
         std::vector<int32_t> srcData(shape.TotalSize());
-        Lotus::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
+        ::ONNX::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
 
         // CNTK does not support int. We need to convert to float.
         std::vector<float> srcFloatData(shape.TotalSize());
@@ -435,7 +435,7 @@ Constant ONNXToCNTKHelper::CreateConstant(const onnx::TensorProto &valueProto, c
     case TensorProto_DataType_INT64:
     {
         std::vector<int64_t> srcData(shape.TotalSize());
-        Lotus::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
+        ::ONNX::Utils::TensorUtils::UnpackTensor(valueProto, &srcData[0], shape.TotalSize());
 
         // CNTK does not support int64_t. We need to convert to float.
         std::vector<float> srcFloatData(shape.TotalSize());

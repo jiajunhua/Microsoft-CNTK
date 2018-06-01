@@ -34,7 +34,7 @@
 #include "proto/onnx/core/common/exceptions.h"
 #include "proto/onnx/core/common/status.h"
 
-namespace Lotus
+namespace ONNX
 {
 
 template <typename Key, typename Value>
@@ -69,28 +69,28 @@ static std::vector<std::string> GetStackTrace()
 
 // Capture where a message is coming from. Use __FUNCTION__ rather than the much longer __PRETTY_FUNCTION__
 #define WHERE \
-    Lotus::CodeLocation(__FILE__, __LINE__, __FUNCTION__)
+    ONNX::CodeLocation(__FILE__, __LINE__, __FUNCTION__)
 
 #define WHERE_WITH_STACK \
-    Lotus::CodeLocation(__FILE__, __LINE__, __PRETTY_FUNCTION__, Lotus::GetStackTrace())
+    ONNX::CodeLocation(__FILE__, __LINE__, __PRETTY_FUNCTION__, ONNX::GetStackTrace())
 
 // Throw an exception with optional message.
 // NOTE: The arguments get streamed into a string via ostringstream::operator<<
 // DO NOT use a printf format string, as that will not work as you expect.
-#define LOTUS_THROW(...) throw Lotus::LotusException(WHERE_WITH_STACK, Lotus::MakeString(__VA_ARGS__))
+#define LOTUS_THROW(...) throw ONNX::LotusException(WHERE_WITH_STACK, ONNX::MakeString(__VA_ARGS__))
 
 // Just in order to mark things as not implemented. Do not use in final code.
-#define LOTUS_NOT_IMPLEMENTED(...) throw Lotus::NotImplementedException(Lotus::MakeString(__VA_ARGS__))
+#define LOTUS_NOT_IMPLEMENTED(...) throw ONNX::NotImplementedException(ONNX::MakeString(__VA_ARGS__))
 
 // Check condition.
 // NOTE: The arguments get streamed into a string via ostringstream::operator<<
 // DO NOT use a printf format string, as that will not work as you expect.
 #define LOTUS_ENFORCE(condition, ...) \
     if (!(condition))                 \
-    throw Lotus::LotusException(WHERE_WITH_STACK, #condition, Lotus::MakeString(__VA_ARGS__))
+    throw ONNX::LotusException(WHERE_WITH_STACK, #condition, ONNX::MakeString(__VA_ARGS__))
 
 #define LOTUS_MAKE_STATUS(category, code, ...) \
-    Status(category, code, Lotus::MakeString(__VA_ARGS__))
+    Status(category, code, ONNX::MakeString(__VA_ARGS__))
 
 // Macros to disable the copy and/or move ctor and assignment methods
 // These are usually placed in the private: declarations for a class.
@@ -149,15 +149,15 @@ inline void MakeStringInternal(std::stringstream& ss, const T& t) noexcept
 template <typename T, typename... Args>
 inline void MakeStringInternal(std::stringstream& ss, const T& t, const Args&... args) noexcept
 {
-    ::Lotus::MakeStringInternal(ss, t);
-    ::Lotus::MakeStringInternal(ss, args...);
+    ::ONNX::MakeStringInternal(ss, t);
+    ::ONNX::MakeStringInternal(ss, args...);
 }
 
 template <typename... Args>
 string MakeString(const Args&... args)
 {
     std::stringstream ss;
-    ::Lotus::MakeStringInternal(ss, args...);
+    ::ONNX::MakeStringInternal(ss, args...);
     return string(ss.str());
 }
 
@@ -172,4 +172,4 @@ inline string MakeString(const char* p_str)
     return string(p_str);
 }
 
-} // namespace Lotus
+} // namespace ONNX

@@ -3,7 +3,7 @@
 #include "proto/onnx/core/common/status.h"
 #include "proto/onnx/core/common/CommonSTD.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Common
 {
@@ -55,7 +55,7 @@ std::string Status::ToString() const
         result += " : ";
         result += std::to_string(errno);
     }
-    else if (StatusCategory::LOTUS == state_->category)
+    else if (StatusCategory::ONNX == state_->category)
     {
         result += "[LotusError]";
         result += " : ";
@@ -83,4 +83,4 @@ const std::string& Status::EmptyString()
     return s_empty;
 }
 } // namespace Common
-} // namespace Lotus
+} // namespace ONNX

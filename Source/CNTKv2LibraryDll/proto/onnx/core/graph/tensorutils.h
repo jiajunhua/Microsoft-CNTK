@@ -10,7 +10,7 @@
 #include "proto/onnx/core/common/status.h"
 #include "proto/onnx/onnx/onnx_pb.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Utils
 {
@@ -22,18 +22,18 @@ public:
     {                                                                                                     \
         if (nullptr == p_data || Type != tensor.data_type())                                              \
         {                                                                                                 \
-            return Status(StatusCategory::LOTUS, StatusCode::INVALID_ARGUMENT);                           \
+            return Status(StatusCategory::ONNX, StatusCode::INVALID_ARGUMENT);                           \
         }                                                                                                 \
         if (tensor.has_raw_data())                                                                        \
         {                                                                                                 \
             if (tensor.raw_data().size() != ((expected_size) * sizeof(T)))                                \
-                return Status(StatusCategory::LOTUS, StatusCode::FAIL,                                    \
+                return Status(StatusCategory::ONNX, StatusCode::FAIL,                                    \
                               "UnpackTensor: the pre-allocated size does not match the raw data size");   \
             UnpackTensorWithRawData(tensor, p_data);                                                      \
             return Status::OK();                                                                          \
         }                                                                                                 \
         if (tensor.field_size() != expected_size)                                                         \
-            return Status(StatusCategory::LOTUS, StatusCode::FAIL,                                        \
+            return Status(StatusCategory::ONNX, StatusCode::FAIL,                                        \
                           "UnpackTensor: the pre-allocated size does not match the size in proto");       \
         for (auto elem : tensor.field_name()) {                                                           \
             *p_data++ = static_cast<T>(elem);                                                             \
@@ -94,4 +94,4 @@ private:
     }
 }; // namespace Utils
 } // namespace Utils
-} // namespace Lotus
+} // namespace ONNX

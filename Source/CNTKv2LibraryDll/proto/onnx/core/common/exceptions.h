@@ -10,7 +10,7 @@
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/common/code_location.h"
 
-namespace Lotus
+namespace ONNX
 {
 
 class NotImplementedException : public std::logic_error
@@ -71,4 +71,4 @@ private:
     std::string what_;
 };
 
-} // namespace Lotus
+} // namespace ONNX

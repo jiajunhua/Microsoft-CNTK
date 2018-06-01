@@ -20,7 +20,7 @@
 
 namespace
 {
-using namespace ::Lotus::Common;
+using namespace ::ONNX::Common;
 #ifdef _WIN32
 inline Status FileOpenRd(const std::wstring& path, /*out*/ int* p_fd)
 {

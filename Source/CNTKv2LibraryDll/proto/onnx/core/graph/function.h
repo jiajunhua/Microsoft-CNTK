@@ -4,7 +4,7 @@
 #include "proto/onnx/core/graph/graph.h"
 #include "proto/onnx/core/graph/rewrite_rule.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 // TODO: Design a loose way to register rewrite rules into RuleBasedGraphTransformer.
 // Function representation class.
@@ -66,4 +66,4 @@ public:
     }
 };
 
-} // namespace LotusIR
+} // namespace ONNXIR

@@ -3,7 +3,7 @@
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/graph/graph.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 
 // The graph rewrite API for rewrite rules.
@@ -98,4 +98,4 @@ private:
     const std::string name_;
     const std::string desc_;
 };
-} // namespace LotusIR
+} // namespace ONNXIR

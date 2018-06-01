@@ -16,7 +16,7 @@
 // #include "gsl/pointers"
 #include "gsl/gsl_util"
 
-namespace LotusIR
+namespace ONNXIR
 {
 Model::Model(const std::string& graph_name, bool is_onnx_domain_only, const ModelMetaData& model_metadata, const LotusOpSchemaRegistry* local_registry)
 {
@@ -123,7 +123,7 @@ Version Model::ModelVersion() const
     return kNoVersion;
 }
 
-void Model::SetModelversion(LotusIR::Version version)
+void Model::SetModelversion(ONNXIR::Version version)
 {
     model_proto_->set_model_version(version);
 }
@@ -214,16 +214,16 @@ Status Model::Load(std::istream& model_istream, ModelProto* p_model_proto)
 {
     if (!model_istream.good())
     {
-        return Status(LOTUS, INVALID_ARGUMENT, "Invalid istream object.");
+        return Status(StatusCategory::ONNX, INVALID_ARGUMENT, "Invalid istream object.");
     }
     if (!p_model_proto)
     {
-        return Status(LOTUS, INVALID_ARGUMENT, "Null model_proto ptr.");
+        return Status(StatusCategory::ONNX, INVALID_ARGUMENT, "Null model_proto ptr.");
     }
     const bool result = p_model_proto->ParseFromIstream(&model_istream);
     if (!result)
     {
-        return Status(LOTUS, INVALID_PROTOBUF, "Failed to load model because protobuf parsing failed.");
+        return Status(StatusCategory::ONNX, INVALID_PROTOBUF, "Failed to load model because protobuf parsing failed.");
     }
     return Status::OK();
 }
@@ -233,7 +233,7 @@ Status Model::Load(const ModelProto& model_proto, std::shared_ptr<Model>* model,
     // we expect a graph to be present
     if (!model_proto.has_graph())
     {
-        return Status(LOTUS, INVALID_ARGUMENT, "No graph was found in the protobuf.");
+        return Status(StatusCategory::ONNX, INVALID_ARGUMENT, "No graph was found in the protobuf.");
     }
 
     // need to call private ctor so can't use make_shared
@@ -283,7 +283,7 @@ Status Model::LoadFromBytes(int count, void* p_bytes, /*out*/ std::shared_ptr<Mo
     bool result = modelProto->ParseFromArray(p_bytes, count);
     if (!result)
     {
-        return Status(LOTUS, INVALID_PROTOBUF, "Protobuf parsing failed.");
+        return Status(StatusCategory::ONNX, INVALID_PROTOBUF, "Protobuf parsing failed.");
     }
 
     (*p_model).reset(new Model(std::move(modelProto), local_registry));
@@ -311,7 +311,7 @@ Status Model::Load(int fd, std::shared_ptr<Model>* p_model, const LotusOpSchemaR
 {
     if (fd < 0)
     {
-        return Status(LOTUS, INVALID_ARGUMENT, "<p_fd> less than 0.");
+        return Status(StatusCategory::ONNX, INVALID_ARGUMENT, "<p_fd> less than 0.");
     }
 
     auto raw_input = std::unique_ptr<ZeroCopyInputStream>(std::make_unique<FileInputStream>(fd));
@@ -327,7 +327,7 @@ Status Model::Load(int fd, std::shared_ptr<Model>* p_model, const LotusOpSchemaR
 
     if (!result)
     {
-        return Status(LOTUS, INVALID_PROTOBUF, "Protobuf parsing failed.");
+        return Status(StatusCategory::ONNX, INVALID_PROTOBUF, "Protobuf parsing failed.");
     }
 
     (*p_model).reset(new Model(std::move(model_proto), local_registry));
@@ -342,7 +342,7 @@ Status Model::Save(Model& model, int p_fd)
 {
     if (p_fd < 0)
     {
-        return Status(LOTUS, INVALID_ARGUMENT, "<p_fd> is less than 0.");
+        return Status(StatusCategory::ONNX, INVALID_ARGUMENT, "<p_fd> is less than 0.");
     }
 
     RETURN_IF_ERROR(model.MainGraph()->Resolve());
@@ -354,7 +354,7 @@ Status Model::Save(Model& model, int p_fd)
     }
     else
     {
-        return Status(LOTUS, INVALID_PROTOBUF, "Protobuf serialization failed.");
+        return Status(StatusCategory::ONNX, INVALID_PROTOBUF, "Protobuf serialization failed.");
     }
 }
-} // namespace LotusIR
+} // namespace ONNXIR

@@ -6,7 +6,7 @@
 #include <mutex>
 #include "sstream"
 
-namespace LotusIR
+namespace ONNXIR
 {
 using OpName_Domain_Version_Schema_Map = std::unordered_map<
     std::string,
@@ -14,7 +14,7 @@ using OpName_Domain_Version_Schema_Map = std::unordered_map<
 
 using Domain_To_Version_Map = std::unordered_map<std::string, std::pair<int, int>>;
 
-// OpSchemaRegistry is singlton in onnx, so we have to duplicate it in Lotus
+// OpSchemaRegistry is singlton in onnx, so we have to duplicate it in ONNX
 // If later onnx design changed, we don't need it any more.
 class LotusOpSchemaRegistry final
 {
@@ -23,7 +23,7 @@ public:
     // Add customized domain to min/max version.
     // Onnx partners are able to use onnx operator schema api to
     // register customized op in their own domain.
-    Lotus::Common::Status AddDomainToVersion(
+    ONNX::Common::Status AddDomainToVersion(
         const std::string& domain,
         int max_version)
     {
@@ -44,7 +44,7 @@ public:
         return domain_version_map_;
     }
 
-    Lotus::Common::Status RegisterOpSchema(ONNX_NAMESPACE::OpSchema& op_schema)
+    ONNX::Common::Status RegisterOpSchema(ONNX_NAMESPACE::OpSchema& op_schema)
     {
         try
         {
@@ -52,7 +52,7 @@ public:
         }
         catch (const std::exception& e)
         {
-            return Lotus::Common::Status(Lotus::Common::LOTUS, Lotus::Common::INVALID_ARGUMENT, "Schema error: " + std::string(e.what()));
+            return ONNX::Common::Status(StatusCategory::ONNX, ONNX::Common::INVALID_ARGUMENT, "Schema error: " + std::string(e.what()));
         }
 
         auto& op_name = op_schema.Name();
@@ -69,7 +69,7 @@ public:
                     << op_schema.line()
                     << ", but it is already registered from file "
                     << schema.file() << " line " << schema.line() << std::endl;
-            return Lotus::Common::Status(Lotus::Common::LOTUS, Lotus::Common::INVALID_ARGUMENT, ostream.str());
+            return ONNX::Common::Status(StatusCategory::ONNX, ONNX::Common::INVALID_ARGUMENT, ostream.str());
         }
 
         auto ver_range_map = DomainVersionMap();
@@ -82,7 +82,7 @@ public:
                     << ") from file " << op_schema.file() << " line "
                     << op_schema.line() << ", but it its domain is not"
                     << "known by the checker." << std::endl;
-            return Lotus::Common::Status(Lotus::Common::LOTUS, Lotus::Common::INVALID_ARGUMENT, ostream.str());
+            return ONNX::Common::Status(StatusCategory::ONNX, ONNX::Common::INVALID_ARGUMENT, ostream.str());
         }
         auto lower_bound_incl = ver_range_it->second.first;
         auto upper_bound_incl = ver_range_it->second.second;
@@ -99,7 +99,7 @@ public:
                 << "bumped the operator version but "
                 << "forgot to update the version range in DomainToVersionRange "
                 << "in onnx/defs/schema.h)." << std::endl;
-            return Lotus::Common::Status(Lotus::Common::LOTUS, Lotus::Common::INVALID_ARGUMENT, ostream.str());
+            return ONNX::Common::Status(StatusCategory::ONNX, ONNX::Common::INVALID_ARGUMENT, ostream.str());
         }
         map_[op_name][op_domain].emplace(std::make_pair(ver, op_schema));
         return Status::OK();
@@ -203,4 +203,4 @@ public:
         return r;
     }
 };
-} // namespace LotusIR
+} // namespace ONNXIR

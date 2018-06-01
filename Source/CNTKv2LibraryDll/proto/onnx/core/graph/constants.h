@@ -6,7 +6,7 @@
 
 #include "proto/onnx/core/common/common.h"
 
-namespace LotusIR
+namespace ONNXIR
 {
 constexpr const char* kNoOp = "NoOp";
 constexpr const char* kConstant = "Constant";
@@ -17,4 +17,4 @@ constexpr const char* kMLDomain = "ai.onnx.ml";
 constexpr const char* kMSDomain = "com.microsoft";
 constexpr const char* kCpuExecutionProvider = "CPUExecutionProvider";
 constexpr const char* kCudaExecutionProvider = "CUDAExecutionProvider";
-} // namespace LotusIR
+} // namespace ONNXIR

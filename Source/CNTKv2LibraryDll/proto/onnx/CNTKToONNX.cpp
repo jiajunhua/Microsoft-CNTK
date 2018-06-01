@@ -396,7 +396,7 @@ std::unique_ptr<ONNXIR::Model> CNTKToONNX::CreateModel(const FunctionPtr& src)
     std::unique_ptr<ONNXIR::Model> model(new ONNXIR::Model("CNTKGraph", true));
     auto dstGraph = model->MainGraph();
     CNTKToONNXHelper::Copy(src, dstGraph);
-    Lotus::Common::Status status = dstGraph->Resolve();
+    ::ONNX::Common::Status status = dstGraph->Resolve();
     if (!status.IsOK())
         LogicError("%s", status.ErrorMessage().c_str());
 

@@ -6,7 +6,7 @@
 #include "proto/onnx/core/common/code_location.h"
 #include "proto/onnx/core/common/logging/severity.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Logging
 {
@@ -121,4 +121,4 @@ private:
     std::ostringstream stream_;
 };
 } // namespace Logging
-} // namespace Lotus
+} // namespace ONNX

@@ -19,7 +19,6 @@
 
 using namespace CNTK;
 
-#define ONNXIR LotusIR
 using namespace ONNXIR;
 
 const std::string LSTMInputBiasNameHint = "_bias_";

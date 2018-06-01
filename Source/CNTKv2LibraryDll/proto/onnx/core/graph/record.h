@@ -8,7 +8,7 @@
 #include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/common/status.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Common
 {
@@ -38,7 +38,7 @@ public:
     {
         if (nullptr == pp_name || index >= names_.size())
         {
-            return Status(LOTUS, StatusCode::INVALID_ARGUMENT);
+            return Status(StatusCategory::ONNX, StatusCode::INVALID_ARGUMENT);
         }
 
         *pp_name = &(names_[index]);
@@ -56,4 +56,4 @@ private:
     Values values_;
 };
 } // namespace Common
-} // namespace Lotus
+} // namespace ONNX

@@ -4,7 +4,7 @@
 
 #include "proto/onnx/core/common/logging/logging.h"
 
-namespace Lotus
+namespace ONNX
 {
 namespace Logging
 {
@@ -33,4 +33,4 @@ private:
     virtual void SendImpl(const Timestamp &timestamp, const std::string &logger_id, const Capture &message) = 0;
 };
 } // namespace Logging
-} // namespace Lotus
+} // namespace ONNX
