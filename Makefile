@@ -527,14 +527,14 @@ CNTKLIBRARY_COMMON_SRC =\
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/generator/defs.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/logical/defs.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/math/defs.cpp \
-	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/math/old.cpp \
+	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/math/old.cc \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/nn/defs.cpp \
-	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/nn/old.cpp \
+	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/nn/old.cc \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/reduction/defs.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/rnn/defs.cpp \
-	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/rnn/old.cpp \
+	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/rnn/old.cc \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/tensor/defs.cpp \
-	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/tensor/old.cpp \
+	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/tensor/old.cc \
     $(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/traditionalml/defs.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/data_type_utils.cpp \
 	$(SOURCEDIR)/CNTKv2LibraryDll/proto/onnx/onnx/defs/schema.cpp \
