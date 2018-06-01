@@ -1,7 +1,7 @@
 #pragma once
 
-#include "proto/onnx/core/graph/graph.h"
 #include "proto/onnx/core/common/common.h"
+#include "proto/onnx/core/graph/graph.h"
 
 namespace LotusIR
 {

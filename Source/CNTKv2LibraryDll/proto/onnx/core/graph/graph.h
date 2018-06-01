@@ -7,10 +7,11 @@
 #include <unordered_map>
 #include <unordered_set>
 
+#include "proto/onnx/core/common/common.h"
+
 #include "gsl/pointers"
 #include "gsl/gsl_util"
 
-#include "proto/onnx/core/common/common.h"
 #include "proto/onnx/core/common/status.h"
 #include "proto/onnx/core/common/const_pointer_container.h"
 #include "proto/onnx/core/graph/constants.h"
