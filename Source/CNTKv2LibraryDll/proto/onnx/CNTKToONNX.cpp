@@ -3664,24 +3664,6 @@ ONNXIR::Node* CNTKToONNXHelper::CreateONNXNodesForOptimizedRNNStack(const Functi
         auto BArgName = ToString(Wcombined.Uid()) + "_B_" + std::to_string(i);
         CreateRecurrentWeightONNXNodes(graph, variableNodes, Wcombined, inputs, B[i], BArgName);
 
-        // Create other optional input args
-        // sequence_lens (optional)
-        auto seqLenArgName = ToString(Wcombined.Uid()) + "_seq_len_" + std::to_string(i);
-        ONNXIR::NodeArg &inputArg_sequence_lens = graph->CreateOwnedNodeArg(seqLenArgName, nullptr);
-        inputs.push_back(&inputArg_sequence_lens);
-        // initial_h (optional)
-        auto initalHArgName = ToString(Wcombined.Uid()) + "_initial_h_" + std::to_string(i);
-        ONNXIR::NodeArg &inputArg_initial_h = graph->CreateOwnedNodeArg(initalHArgName, nullptr);
-        inputs.push_back(&inputArg_initial_h);
-        // initial_c (optional)
-        auto initalCArgName = ToString(Wcombined.Uid()) + "_initial_c_" + std::to_string(i);
-        ONNXIR::NodeArg &inputArg_initial_c = graph->CreateOwnedNodeArg(initalCArgName, nullptr);
-        inputs.push_back(&inputArg_initial_c);
-        // P (peepholes) (optional)
-        auto initalPArgName = ToString(Wcombined.Uid()) + "_P_" + std::to_string(i);
-        ONNXIR::NodeArg &inputArg_P = graph->CreateOwnedNodeArg(initalPArgName, nullptr);
-        inputs.push_back(&inputArg_P);
-
         // ==== Step 5. Create output nodes =====
         // For now, we always output Y. So this attribute value is 1.
         int64_t outputSequence = 1;
@@ -3689,20 +3671,6 @@ ONNXIR::Node* CNTKToONNXHelper::CreateONNXNodesForOptimizedRNNStack(const Functi
         auto outArgName = (i == numLayers - 1) ? ToString(ornnOutput.Uid()) : ToString(ornnOutput.Uid()) + "_" + std::to_string(i);
         ONNXIR::NodeArg &outputArg_Y = graph->CreateOwnedNodeArg(outArgName, &ornnOutputArgType);
         outputs.push_back(&outputArg_Y);
-
-        // Dummy output arg Y_h
-        auto outputYhArgName = ToString(ornnOutput.Uid()) + "_Y_h_" + std::to_string(i);
-        auto outputYhArgType = ToTypeProto(std::vector<int>({1, 1, static_cast<int>(hiddenSize)}), false);
-        UpdateONNXType(ornnOutput.GetDataType(), outputYhArgType);
-        ONNXIR::NodeArg &outputArg_Yh = graph->CreateOwnedNodeArg(outputYhArgName, &outputYhArgType);
-        outputs.push_back(&outputArg_Yh);
-
-        // Dummy output arg Y_c
-        auto outputYcArgName = ToString(ornnOutput.Uid()) + "_Y_c_" + std::to_string(i);
-        auto outputYcArgType = ToTypeProto(std::vector<int>({1, 1, static_cast<int>(hiddenSize)}), false);
-        UpdateONNXType(ornnOutput.GetDataType(), outputYcArgType);
-        ONNXIR::NodeArg &outputArg_Yc = graph->CreateOwnedNodeArg(outputYcArgName, &outputYcArgType);
-        outputs.push_back(&outputArg_Yc);
 
         // ==== Step 6. Add ONNX LSTM node ====
         auto rnnOpNameLookup = Operators::OptimizedRnnToOnnxOpLookup();
