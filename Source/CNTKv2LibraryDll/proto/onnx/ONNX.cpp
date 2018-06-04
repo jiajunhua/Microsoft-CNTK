@@ -18,14 +18,14 @@ using namespace CNTK;
 
 namespace CNTK
 {
-    // MaxVersion number in ONNX 2.1 is 7. Change this number (e.g. to 1 or 5) 
+    // MaxVersion number in ONNX 1.2 is 7. Change this number (e.g. to 1 or 5) 
     // to experiment with earlier version ONNX. This is to help debugging with reshape op 
     // (and some convolution ops which only passed with newer version)
     // to do this:
     // onnx::OpSchemaRegistry::DomainToVersionRange::Instance().AddDomainToVersion(LotusIR::kOnnxDomain, 1, 5);
     const int ONNX2_1MAX_VERSION = 7;
 
-    // for debugging (and probably useful backward compitability) propose, use this helper to tell 
+    // for debugging (and probably useful backward compatibility) propose, use this helper to tell 
     // how to implement a conversion. It is used for reshape op.
     bool IsONNX1_2Supported()
     {

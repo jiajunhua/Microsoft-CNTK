@@ -2658,7 +2658,7 @@ void CNTKToONNXHelper::ProcessInputs(const FunctionPtr& src,
 
         if (cntkOpName == "Reshape" && IsONNX1_2Supported())
         {
-            // ONNX2.1 reshape node take shape as input instead of attribute. 
+            // ONNX1.2 reshape node take shape as input instead of attribute. 
             const std::vector<size_t>& shapeVec = src->Output().Shape().Dimensions();
 
             std::vector<int> newShapeVec;
